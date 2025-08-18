@@ -114,7 +114,7 @@ body{
   background:linear-gradient(90deg,var(--accentC) 45%, var(--accentA) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:.01em;
   text-shadow:0 6px 28px rgba(106,92,255,0.04)
 }
-.hero-lead{color:var(--muted-weak);margin-top:14px;font-size:1.02rem;line-height:1.55;font-weight:500}
+.hero-lead{color:var(--muted-weak);margin-top:14px;font-size:1.02rem;line-height:1.55;font-weight:500; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);}
 .cta-row{margin-top:20px;display:flex;gap:12px;flex-wrap:wrap}
 .cta-row .btn{font-size:1rem;border:none;padding:9px 14px;border-radius:12px;cursor:pointer;font-weight:800}
 .cta-ghost{background:transparent;border:1.2px solid rgba(255,255,255,0.06);color:var(--muted-weak);padding:9px 14px}
@@ -148,7 +148,7 @@ body{
 section{padding:28px 18px;border-radius:12px}
 .section-title{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
 .section-title h2{font-size:1.2rem;background:linear-gradient(90deg,var(--accentC),var(--accentA));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.section-sub{color:var(--muted-weak);font-size:.95rem}
+.section-sub{color:var(--muted-weak);font-size:.95rem; text-shadow: 1px 1px 3px rgba(0,0,0,0.5);}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
 .card{background:var(--card);padding:12px;border-radius:12px;border:var(--glass-border);box-shadow:0 10px 28px rgba(0,0,0,0.55);transition:transform .18s;overflow:hidden;opacity:0;transform:translateY(12px)}
 .card.visible{opacity:1;transform:none}
@@ -278,7 +278,7 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
       <div class="stat-panel" aria-hidden="false">
         <div class="stat-card"><div class="kicker">Guru Wali</div><div class="num">Ibu Fauziah</div><div class="desc">Wali Kelas XI-4</div></div>
         <div class="stat-card"><div class="kicker">Jumlah Foto</div><div class="num" id="photoCount">0</div><div class="desc">Galeri</div></div>
-        <div class="stat-card"><div class="kicker">Total Siswa</div><div class="num" id="stat-jml-siswa">0</div><div class="desc">Anggota</div></div>
+        <div class="stat-card"><div class="kicker">Total Siswa</div><div class="num" id="stat-jml-siswa">35</div><div class="desc">Anggota</div></div>
         <div class="stat-card"><div class="kicker">Agenda Aktif</div><div class="num" id="stat-agenda">0</div><div class="desc">Upcoming</div></div>
       </div>
 
@@ -350,19 +350,20 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 
     <div class="table-wrap" role="table">
       <table aria-label="Roster Pelajaran" style="width:100%;border-collapse:collapse">
-        <thead><tr><th>Jam</th><th>Pelajaran</th><th>Guru</th></tr></thead>
-        <tbody>
-          <tr><td>1</td><td>Matematika</td><td>Bpk IYAN</td></tr>
-          <tr><td>2</td><td>B. Indonesia</td><td>Ibu TIYOT</td></tr>
-          <tr><td>3</td><td>IPA</td><td>Bpk TIA</td></tr>
-          <tr><td>4</td><td>IPS</td><td>Ibu MUTIA</td></tr>
-          <tr><td>5</td><td>B. Inggris</td><td>Ibu UIS</td></tr>
-        </tbody>
+        <thead>
+            <tr>
+                <th>Hari</th>
+                <th>Jam Ke-</th>
+                <th>Mata Pelajaran</th>
+            </tr>
+        </thead>
+        <tbody id="roster-body">
+            </tbody>
       </table>
     </div>
 
     <div class="hcenter" style="margin-top:12px">
-      <a class="btn cta-ghost" href="assets/1755172317055.jpg" download>📥 Download Jadwal Pelajaran</a>
+      <a class="btn cta-ghost" href="assets/1755172317055.jpg" download>📥 Download Gambar Jadwal</a>
     </div>
   </div>
 </section>
@@ -516,7 +517,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // ===============================================
   // MAIN APP INITIALIZATION
-  // Fetch data first, then render the page content
   // ===============================================
   async function initializeApp() {
     try {
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       
-      // Render semua konten dari data.json
+      // Render content from data.json
       renderPiket(data.piket);
       renderAgenda(data.agenda);
       renderSiswa(data.siswa);
@@ -536,11 +536,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error("Gagal memuat data kelas:", error);
       showToast("Gagal memuat data. Coba refresh halaman.", 5000);
-      // Render fallback content if data fails to load
       $('#siswa-grid').innerHTML = '<p class="text-muted hcenter">Gagal memuat daftar siswa.</p>';
     }
     
-    // These functions don't depend on data.json, so they can run anytime
+    // Render content NOT from data.json
+    renderRoster();
     setupStaticWidgets();
     setupEventListeners();
     observeElements();
@@ -551,14 +551,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===============================================
   function renderStats(data) {
     if (data.galeri) $('#photoCount').textContent = data.galeri.length || 0;
-    if (data.siswa) $('#stat-jml-siswa').textContent = data.siswa.length || 0;
+    // We keep total students static at 35 as requested
     if (data.agenda) $('#stat-agenda').textContent = data.agenda.length || 0;
   }
   
   function renderPiket(piketData) {
     const piketBody = $('#piket-body');
     if(!piketBody || !piketData) return;
-    const today = (new Date().getDay() + 6) % 7; // Monday = 0, Sunday = 6
+    const today = (new Date().getDay() + 6) % 7; // Monday = 0
     piketBody.innerHTML = piketData.map((piket, i) => `
       <tr${today === i ? ' class="today"' : ''}>
         <td>${piket.hari}</td>
@@ -591,7 +591,8 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSiswa(siswaData) {
     const siswaGrid = $('#siswa-grid');
     if(!siswaGrid || !siswaData) return;
-    siswaGrid.innerHTML = ''; // Clear loading message
+    $('#stat-jml-siswa').textContent = siswaData.length; // Update total siswa from data.json
+    siswaGrid.innerHTML = ''; // Clear loading
     const avatarColors = ['00d4ff', 'ff2fb3', '6a5cff', '22ffbb', 'ffd600'];
     siswaData.forEach((siswa, index) => {
       const color = avatarColors[index % avatarColors.length];
@@ -610,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderGallery(galleryData) {
     const galleryGrid = $('#gallery-grid');
     if(!galleryGrid || !galleryData) return;
-    galleryGrid.innerHTML = ''; // Clear any placeholders
+    galleryGrid.innerHTML = '';
     galleryData.forEach(item => {
         const card = document.createElement('div');
         card.className = 'item card';
@@ -622,6 +623,34 @@ document.addEventListener('DOMContentLoaded', () => {
         galleryGrid.appendChild(card);
     });
   }
+  
+  function renderRoster() {
+      const rosterBody = $('#roster-body');
+      if (!rosterBody) return;
+
+      const jadwal = {
+          "Senin": ["Upacara", "B.Indonesia", "B.Indonesia", "PAI", "PAI", "Istirahat", "PKN", "PKN", "Seni Budaya", "Seni Budaya"],
+          "Selasa": ["B.Inggris", "B.Inggris", "PJOK", "PJOK", "Istirahat", "B.Daerah", "B.Daerah", "Matematika", "Matematika"],
+          "Rabu": ["Sejarah", "Sejarah", "Kewirausahaan", "Kewirausahaan", "Istirahat", "Matematika", "Matematika", "B.Indonesia", "B.Indonesia"],
+          "Kamis": ["Fisika", "Fisika", "Kimia", "Kimia", "Istirahat", "Biologi", "Biologi", "BK", "BK"],
+          "Jumat": ["Informatika", "Informatika", "Istirahat", "Sejarah", "Sejarah"]
+      };
+
+      let html = '';
+      for (const hari in jadwal) {
+          jadwal[hari].forEach((mapel, index) => {
+              html += `<tr>`;
+              if (index === 0) {
+                  html += `<td rowspan="${jadwal[hari].length}">${hari}</td>`;
+              }
+              html += `<td>${index + 1}</td>`;
+              html += `<td>${mapel}</td>`;
+              html += `</tr>`;
+          });
+      }
+      rosterBody.innerHTML = html;
+  }
+
 
   function setInspirasi(siswaData) {
     const el = $('#siswa-inspiratif');
@@ -632,7 +661,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ===============================================
-  // STATIC WIDGETS & NON-DATA-DEPENDENT FUNCTIONS
+  // STATIC WIDGETS
   // ===============================================
   function setupStaticWidgets() {
     // Motivasi
@@ -697,7 +726,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const heroBg = $('#heroParallax');
     if(heroBg) window.addEventListener('scroll', () => { heroBg.style.transform = `translateY(${window.scrollY * 0.16}px)`; }, { passive: true });
 
-    // Menu Toggle (Refactored)
+    // Menu Toggle
     const menuBtn = $('#menuBtn');
     const navlinks = $('#navlinks');
     if (menuBtn && navlinks) {
@@ -732,36 +761,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && lightbox.classList.contains('open')) lightbox.click(); });
     
-    // Event listener untuk tombol denah duduk
+    // Denah duduk
     const denahBtn = $('#lihatDenahBtn');
     if (denahBtn) {
       denahBtn.addEventListener('click', () => {
         const lightbox = $('#lightbox');
         const modalImg = $('#modalImg');
         if (lightbox && modalImg) {
-          modalImg.src = 'assets/1755172317014.jpg'; // Pastikan nama file ini benar
+          modalImg.src = 'assets/1755172317014.jpg';
           lightbox.classList.add('open');
           lightbox.setAttribute('aria-hidden', 'false');
         }
       });
     }
 
-    // Feedback Form (Client-side only demo)
+    // Feedback Form
     const feedbackForm = $('#feedbackForm');
     if(feedbackForm) {
       feedbackForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        // TODO: Untuk fungsionalitas nyata, kirim data form ke backend
-        // contoh: fetch('/api/feedback', { method: 'POST', body: new FormData(form) });
-        showToast('Aspirasi terkirim! (Ini hanya demo, data tidak disimpan)', 3500);
+        showToast('Aspirasi terkirim! (Ini hanya demo)', 3500);
         feedbackForm.reset();
       });
     }
     
-    // Voting Form (Client-side only demo)
+    // Voting Form
     const voteForm = $('#voteForm');
     if(voteForm) {
-        let voteCount = {Ekskul:2,Classmeeting:3,Piket:1,Outing:2}; // default values
+        let voteCount = {Ekskul:2,Classmeeting:3,Piket:1,Outing:2};
         voteForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const val = voteForm.vote && voteForm.vote.value;
@@ -774,10 +801,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // QR Code (deferred lib)
+    // QR Code
     const makeQR = () => {
       if(typeof QRCode !== 'undefined'){
-        $('#qrCode').innerHTML = ''; // Clear previous QR if any
+        $('#qrCode').innerHTML = '';
         new QRCode($('#qrCode'), { text: window.location.href, width: 86, height: 86, colorDark : "#00d4ff", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
       }
     };
@@ -799,15 +826,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const order = sort.value || 'az';
       const cards = Array.from(grid.children);
 
-      // First, filter visibility
       cards.forEach(card => {
-        if (!card.dataset.name) return; // Skip non-student cards like the loading message
+        if (!card.dataset.name) return;
         const name = card.dataset.name.toLowerCase();
         const isVisible = name.includes(q);
         card.style.display = isVisible ? '' : 'none';
       });
       
-      // Then, sort the visible elements
       const visibleCards = cards.filter(card => card.style.display !== 'none');
       visibleCards.sort((a,b) => {
         const na = a.dataset.name.toLowerCase();
@@ -815,7 +840,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return order === 'az' ? na.localeCompare(nb) : nb.localeCompare(na);
       });
       
-      // Re-append to the grid in the new order
       visibleCards.forEach(card => grid.appendChild(card));
     }
     
@@ -837,17 +861,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
       
-      // Observe all elements that need revealing
       $$('.widget-card, .card, .siswa-card, .item').forEach(el => revealObserver.observe(el));
     } else {
-      // Fallback for old browsers
       $$('.widget-card, .card, .siswa-card, .item').forEach(el => el.classList.add('visible'));
     }
   }
 
-  // ===============================================
   // START THE APP
-  // ===============================================
   initializeApp();
 
 });
