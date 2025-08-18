@@ -214,7 +214,7 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
   <div class="navbar container" role="navigation" aria-label="Main">
     <div class="brand">
       <div class="logo" id="logoWrap">
-        <img id="logoImg" src="assets/bersama1.jpg" alt="Logo Kelas" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.src='https://via.placeholder.com/52?text=Logo'">
+        <img id="logoImg" src="assets/1755172317026.jpg" alt="Logo Kelas" style="width:100%;height:100%;object-fit:cover" loading="lazy" onerror="this.src='https://via.placeholder.com/52?text=Logo'">
       </div>
       <div>
         <div class="title">Kelas 11-4 • elevenfourgengs</div>
@@ -257,7 +257,8 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 
       <div class="cta-row">
         <button class="btn" id="openGalleryBtn" style="background:linear-gradient(90deg,var(--accentA),var(--accentC));color:#061018;border:none;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:800;">📸 Lihat Galeri</button>
-        <a class="btn cta-ghost" href="assets/jadwal-pelajaran.jpg" download style="font-weight:800;">📥 Download Jadwal</a>
+        <a class="btn cta-ghost" href="assets/1755172317055.jpg" download style="font-weight:800;">📥 Download Jadwal Pelajaran</a>
+        <a class="btn cta-ghost" href="assets/1755172317062.jpg" download style="font-weight:800;">📥 Download Jadwal Piket</a>
       </div>
 
       <div class="hero-structure" aria-hidden="false" style="margin-top:14px;">
@@ -282,7 +283,7 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
       </div>
 
       <div class="hero-photo-wrap">
-        <img class="hero-photo" src="assets/bersama1.jpg" alt="Foto Bersama XI-4" loading="lazy">
+        <img class="hero-photo" src="assets/1755172317026.jpg" alt="Foto Bersama XI-4" loading="lazy">
         <div class="photo-caption">Foto bersama XI-4, 2025 • <b>Kebersamaan adalah kekuatan kita!</b></div>
       </div>
     </div>
@@ -361,7 +362,7 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
     </div>
 
     <div class="hcenter" style="margin-top:12px">
-      <a class="btn cta-ghost" href="assets/jadwal-pelajaran.jpg" download>📥 Download Jadwal Pelajaran</a>
+      <a class="btn cta-ghost" href="assets/1755172317055.jpg" download>📥 Download Jadwal Pelajaran</a>
     </div>
   </div>
 </section>
@@ -439,7 +440,7 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
     <div class="hof-grid">
       <div class="hof-card card">
         <div class="hof-trophy" style="font-size:2.2rem;color:var(--accentD)">🏆</div>
-        <img src="assets/bersama1.jpg" alt="Juara Futsal" class="hof-img" loading="lazy">
+        <img src="assets/1755172317026.jpg" alt="Juara Futsal" class="hof-img" loading="lazy">
         <div class="hof-title" style="font-weight:800;margin-top:8px">Juara 1 Futsal Antar Kelas</div>
         <div class="hof-desc text-muted" style="text-align:center;margin-top:6px">Classmeeting 2025</div>
       </div>
@@ -549,14 +550,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // RENDER FUNCTIONS (Using fetched data)
   // ===============================================
   function renderStats(data) {
-    $('#photoCount').textContent = data.galeri.length || 0;
-    $('#stat-jml-siswa').textContent = data.siswa.length || 0;
-    $('#stat-agenda').textContent = data.agenda.length || 0;
+    if (data.galeri) $('#photoCount').textContent = data.galeri.length || 0;
+    if (data.siswa) $('#stat-jml-siswa').textContent = data.siswa.length || 0;
+    if (data.agenda) $('#stat-agenda').textContent = data.agenda.length || 0;
   }
   
   function renderPiket(piketData) {
     const piketBody = $('#piket-body');
-    if(!piketBody) return;
+    if(!piketBody || !piketData) return;
     const today = (new Date().getDay() + 6) % 7; // Monday = 0, Sunday = 6
     piketBody.innerHTML = piketData.map((piket, i) => `
       <tr${today === i ? ' class="today"' : ''}>
@@ -568,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderAgenda(agendaData) {
     const agendaList = $('#agenda-list');
-    if(!agendaList) return;
+    if(!agendaList || !agendaData) return;
     const formatDate = (str) => {
       const d = new Date(str);
       if(isNaN(d)) return str;
@@ -589,7 +590,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
   function renderSiswa(siswaData) {
     const siswaGrid = $('#siswa-grid');
-    if(!siswaGrid) return;
+    if(!siswaGrid || !siswaData) return;
     siswaGrid.innerHTML = ''; // Clear loading message
     const avatarColors = ['00d4ff', 'ff2fb3', '6a5cff', '22ffbb', 'ffd600'];
     siswaData.forEach((siswa, index) => {
@@ -711,6 +712,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.filterGaleri = (cat) => {
       $$('#gallery-grid .item').forEach(item => { item.style.display = (cat==='all' || item.dataset.cat===cat) ? '' : 'none'; });
     };
+    $('#openGalleryBtn').addEventListener('click', () => {
+        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    });
     const gallery = $('#gallery-grid');
     const lightbox = $('#lightbox');
     const modalImg = $('#modalImg');
@@ -735,7 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const lightbox = $('#lightbox');
         const modalImg = $('#modalImg');
         if (lightbox && modalImg) {
-          modalImg.src = 'assets/denah-kelas.jpg'; // Pastikan nama file ini benar
+          modalImg.src = 'assets/1755172317014.jpg'; // Pastikan nama file ini benar
           lightbox.classList.add('open');
           lightbox.setAttribute('aria-hidden', 'false');
         }
