@@ -353,7 +353,6 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
         <thead>
             <tr>
                 <th>Hari</th>
-                <th>Jam Ke-</th>
                 <th>Mata Pelajaran</th>
             </tr>
         </thead>
@@ -547,11 +546,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ===============================================
-  // RENDER FUNCTIONS (Using fetched data)
+  // RENDER FUNCTIONS
   // ===============================================
   function renderStats(data) {
     if (data.galeri) $('#photoCount').textContent = data.galeri.length || 0;
-    // We keep total students static at 35 as requested
+    $('#stat-jml-siswa').textContent = '35'; // Static as requested
     if (data.agenda) $('#stat-agenda').textContent = data.agenda.length || 0;
   }
   
@@ -591,7 +590,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderSiswa(siswaData) {
     const siswaGrid = $('#siswa-grid');
     if(!siswaGrid || !siswaData) return;
-    $('#stat-jml-siswa').textContent = siswaData.length; // Update total siswa from data.json
     siswaGrid.innerHTML = ''; // Clear loading
     const avatarColors = ['00d4ff', 'ff2fb3', '6a5cff', '22ffbb', 'ffd600'];
     siswaData.forEach((siswa, index) => {
@@ -629,24 +627,19 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!rosterBody) return;
 
       const jadwal = {
-          "Senin": ["Upacara", "B.Indonesia", "B.Indonesia", "PAI", "PAI", "Istirahat", "PKN", "PKN", "Seni Budaya", "Seni Budaya"],
-          "Selasa": ["B.Inggris", "B.Inggris", "PJOK", "PJOK", "Istirahat", "B.Daerah", "B.Daerah", "Matematika", "Matematika"],
-          "Rabu": ["Sejarah", "Sejarah", "Kewirausahaan", "Kewirausahaan", "Istirahat", "Matematika", "Matematika", "B.Indonesia", "B.Indonesia"],
-          "Kamis": ["Fisika", "Fisika", "Kimia", "Kimia", "Istirahat", "Biologi", "Biologi", "BK", "BK"],
-          "Jumat": ["Informatika", "Informatika", "Istirahat", "Sejarah", "Sejarah"]
+        "Senin": ["Prakarya (2 les)", "Sosiologi (1 les)", "Fisika (2 les)", "Matematika (U) (2 les)", "B.Indonesia (2 les)"],
+        "Selasa": ["B.Inggris (3 les)", "Sosiologi (1 les)", "Matematika (TL) (3 les)", "Sejarah (1 les)", "Seni Rupa (2 les)"],
+        "Rabu": ["Matematika (U) (2 les)", "Geografi (2 les)", "Pjok (3 les)", "Agama (3 les)"],
+        "Kamis": ["Geografi (3 les)", "Sosiologi (2 les)", "B.Indonesia (2 les)", "Sejarah (1 les)", "Ppkn (2 les)"],
+        "Jum'at": ["Matematika (TL) (2 les)", "Sosiologi (1 les)", "Fisika (3 les)"]
       };
 
       let html = '';
       for (const hari in jadwal) {
-          jadwal[hari].forEach((mapel, index) => {
-              html += `<tr>`;
-              if (index === 0) {
-                  html += `<td rowspan="${jadwal[hari].length}">${hari}</td>`;
-              }
-              html += `<td>${index + 1}</td>`;
-              html += `<td>${mapel}</td>`;
-              html += `</tr>`;
-          });
+          html += `<tr>`;
+          html += `<td>${hari}</td>`;
+          html += `<td>${jadwal[hari].join('<br>')}</td>`;
+          html += `</tr>`;
       }
       rosterBody.innerHTML = html;
   }
