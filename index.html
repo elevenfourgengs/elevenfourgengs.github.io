@@ -51,6 +51,10 @@ body{
   background-attachment:fixed;
 }
 
+body.no-scroll {
+    overflow: hidden;
+}
+
 /* subtle scrollbar */
 ::-webkit-scrollbar{width:9px;background:transparent}
 ::-webkit-scrollbar-thumb{background:linear-gradient(120deg,var(--accentB),var(--accentA));border-radius:999px;border:2px solid rgba(0,0,0,0.4)}
@@ -73,30 +77,11 @@ body{
 }
 .brand .title{font-weight:900;font-size:1.05rem;letter-spacing:.02em;color:var(--muted)}
 .brand .subtitle{font-size:.78rem;color:var(--muted-weak);margin-top:2px}
-.navlinks{display:flex;gap:8px;align-items:center}
 .navlinks a{color:var(--muted-weak);text-decoration:none;padding:8px 12px;border-radius:10px;font-weight:700;transition:background .15s,color .15s,transform .12s;letter-spacing:.02em;font-size:.95rem}
 .navlinks a.active, .navlinks a:hover{background:linear-gradient(90deg,var(--accentC),var(--accentA));color:#061018;transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,0.45)}
 .menu-toggle{display:none;background:transparent;border:0;color:var(--muted-weak);padding:8px 10px;border-radius:8px;font-weight:700;font-size:1.2rem; cursor:pointer;}
 
-@media(max-width:900px){
-  .navlinks{
-    display:none; /* Initially hidden */
-    flex-direction:column;
-    position:absolute;
-    top:80px;
-    right: 22px;
-    background: var(--card);
-    padding: 12px;
-    border-radius: var(--radius-sm);
-    border: var(--glass-border);
-    box-shadow: var(--shadow-1);
-    z-index: 1000;
-  }
-  .navlinks.open {
-    display:flex; /* Show when .open class is added */
-  }
-  .menu-toggle{display:inline-flex; align-items:center;}
-}
+@media(max-width:900px){.menu-toggle{display:inline-flex; align-items:center;}}
 
 /* HERO */
 .hero{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:46px 18px 54px;position:relative;overflow:hidden}
@@ -170,7 +155,7 @@ tr.today{background:linear-gradient(90deg,var(--accentC) 0%,var(--accentA) 100%)
 .hof-card{background:var(--card);border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.6);border:var(--glass-border);min-width:200px;max-width:280px;padding:12px;display:flex;flex-direction:column;align-items:center;transition:transform .16s}
 .hof-card:hover{transform:scale(1.03)}
 .hof-img{width:68px;height:68px;border-radius:50%;object-fit:cover;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
-.hof-coming-soon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#222,#111);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.05em;border:2px dashed rgba(255,255,255,0.04)}
+.hof-coming-soon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#222,#111);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.05em;border:2px dashed rgba(255,255,255,0.04)}
 
 /* SISWA (2 columns on mobile) */
 .siswa-controls { display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px }
@@ -186,7 +171,7 @@ tr.today{background:linear-gradient(90deg,var(--accentC) 0%,var(--accentA) 100%)
 /* responsive grid: 2 columns on mobile */
 @media (max-width:900px) { .siswa-grid { grid-template-columns: repeat(3, 1fr) } }
 @media (max-width:600px) { .siswa-grid { grid-template-columns: repeat(2, 1fr) } .hero-content h1 { font-size:1.5rem } section { padding:16px 12px } }
-@media (max-width:420px) { .siswa-grid { grid-template-columns: 1fr 1fr } .navlinks a { padding:8px 10px; font-size:.9rem } }
+@media (max-width:420px) { .siswa-grid { grid-template-columns: 1fr 1fr } }
 
 /* FEEDBACK, QR, FAB, TOAST */
 .feedback input, .feedback textarea { width:100%; font-size:1rem; padding:10px 12px; border-radius:10px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:var(--muted); margin-bottom:10px }
@@ -205,6 +190,79 @@ tr.today{background:linear-gradient(90deg,var(--accentC) 0%,var(--accentA) 100%)
 .text-muted { color:var(--muted-weak) }
 a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,255,0.12); outline-offset:3px; border-radius:8px }
 
+
+/* --- CSS BARU UNTUK MENU MOBILE PROFESIONAL --- */
+@media(max-width: 900px) {
+    .navlinks {
+      position: fixed;
+      top: 0;
+      right: -100%; /* Sembunyi di luar layar kanan */
+      width: 280px;
+      height: 100vh;
+      padding: 24px;
+      background: var(--bg-800);
+      z-index: 1001;
+      transition: right 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      border-left: 1px solid var(--glass-border);
+    }
+
+    .navlinks.open {
+      right: 0; /* Muncul ke dalam layar */
+    }
+
+    .nav-close {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      cursor: pointer;
+    }
+
+    .nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: rgba(0,0,0,0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+    }
+
+    .nav-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+}
+
+@media(min-width: 901px) {
+    /* Sembunyikan elemen mobile di desktop */
+    .nav-close, .nav-overlay {
+        display: none;
+    }
+    /* Kembalikan style navlinks di desktop */
+    .navlinks {
+        position: static;
+        height: auto;
+        width: auto;
+        background: none;
+        flex-direction: row;
+        border: none;
+        padding: 0;
+        right: 0;
+        display: flex; /* Pastikan tetap terlihat di desktop */
+    }
+}
 /* end style */
   </style>
 </head>
@@ -222,22 +280,27 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
       </div>
     </div>
 
-    <nav class="navlinks" id="navlinks" aria-label="Site">
-      <a href="#top" class="active">Home</a>
-      <a href="#about">Tentang</a>
-      <a href="#roster">Roster</a>
-      <a href="#piket">Piket</a>
-      <a href="#gallery">Galeri</a>
-      <a href="#siswa">Siswa</a>
-      <a href="#agenda">Agenda</a>
-      <a href="#hall-of-fame">Hall of Fame</a>
-      <a href="#feedback">Aspirasi</a>
-    </nav>
-
     <button class="menu-toggle" id="menuBtn" aria-controls="navlinks" aria-expanded="false">
       <i class="ri-menu-line"></i>
     </button>
   </div>
+
+  <nav class="navlinks" id="navlinks" aria-label="Site">
+    <button class="nav-close" id="navCloseBtn" aria-label="Tutup menu">
+        <i class="ri-close-line"></i>
+    </button>
+    <a href="#top" class="active">Home</a>
+    <a href="#about">Tentang</a>
+    <a href="#roster">Roster</a>
+    <a href="#piket">Piket</a>
+    <a href="#gallery">Galeri</a>
+    <a href="#siswa">Siswa</a>
+    <a href="#agenda">Agenda</a>
+    <a href="#hall-of-fame">Hall of Fame</a>
+    <a href="#feedback">Aspirasi</a>
+  </nav>
+
+  <div class="nav-overlay" id="navOverlay"></div>
 </header>
 
 <section class="hero" id="top" aria-label="Hero area">
@@ -708,12 +771,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // Menu Toggle
     const menuBtn = $('#menuBtn');
     const navlinks = $('#navlinks');
-    if (menuBtn && navlinks) {
-        menuBtn.addEventListener('click', () => {
-            navlinks.classList.toggle('open');
-            const isExpanded = navlinks.classList.contains('open');
-            menuBtn.setAttribute('aria-expanded', isExpanded);
-        });
+    const navCloseBtn = $('#navCloseBtn');
+    const navOverlay = $('#navOverlay');
+
+    const openMenu = () => {
+        navlinks.classList.add('open');
+        navOverlay.classList.add('open');
+        document.body.classList.add('no-scroll');
+        menuBtn.setAttribute('aria-expanded', 'true');
+    };
+
+    const closeMenu = () => {
+        navlinks.classList.remove('open');
+        navOverlay.classList.remove('open');
+        document.body.classList.remove('no-scroll');
+        menuBtn.setAttribute('aria-expanded', 'false');
+    };
+
+    if (menuBtn && navlinks && navCloseBtn && navOverlay) {
+        menuBtn.addEventListener('click', openMenu);
+        navCloseBtn.addEventListener('click', closeMenu);
+        navOverlay.addEventListener('click', closeMenu);
     }
 
     // Gallery & Lightbox
@@ -754,25 +832,41 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Feedback Form (sudah terhubung ke Formspree)
+    // Feedback Form
     const feedbackForm = $('#feedbackForm');
     if(feedbackForm) {
       feedbackForm.addEventListener('submit', e => {
+        // Mencegah reload halaman standar
         e.preventDefault();
+        
+        // Mengambil data dari form
         const form = e.target;
         const data = new FormData(form);
+        
+        // Kirim data ke Formspree pakai Fetch API
         fetch(form.action, {
           method: form.method,
           body: data,
-          headers: { 'Accept': 'application/json' }
+          headers: {
+              'Accept': 'application/json'
+          }
         }).then(response => {
           if (response.ok) {
+            // Kalau berhasil
             showToast('Aspirasi berhasil terkirim! Terima kasih.');
-            form.reset();
+            form.reset(); // Kosongkan form setelah berhasil
           } else {
-            showToast('Oops! Gagal mengirim aspirasi. Coba lagi.');
+            // Kalau ada masalah dari Formspree
+            response.json().then(data => {
+              if (Object.hasOwn(data, 'errors')) {
+                showToast(data["errors"].map(error => error["message"]).join(", "));
+              } else {
+                showToast('Oops! Gagal mengirim aspirasi. Coba lagi.');
+              }
+            })
           }
         }).catch(error => {
+          // Kalau ada masalah jaringan
           showToast('Oops! Ada masalah jaringan. Coba lagi.');
         });
       });
