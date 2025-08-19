@@ -268,10 +268,6 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
         <span class="badge" style="background:linear-gradient(90deg,var(--accentA),var(--accentB));color:#061018">Sekretaris: Dini</span>
         <span class="badge" style="background:linear-gradient(90deg,var(--accentB),var(--accentC));color:#061018">Bendahara: Karina</span>
       </div>
-
-      <div style="margin-top:12px;">
-        <span id="inspirasi-hari-ini" class="badge" style="font-size:0.94em;background:linear-gradient(90deg,var(--accentD),var(--accentC));color:#061018">Siswa Inspiratif Hari Ini: <span id="siswa-inspiratif" style="margin-left:8px">Loading...</span></span>
-      </div>
     </div>
 
     <div>
@@ -318,9 +314,9 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
         <form id="voteForm">
           <label><input type="radio" name="vote" value="Ekskul"> Ekskul</label>
           <label><input type="radio" name="vote" value="Classmeeting"> Classmeeting</label>
-          <label><input type="radio" name="vote" value="Piket"> Piket</label>
-          <label><input type="radio" name="vote" value="Outing"> Outing</label>
-          <button type="submit" style="margin-left:10px;">Vote</button>
+          <label><input type="radio" name="vote" value="Studi Tur"> Studi Tur</label>
+          <label><input type="radio" name="vote" value="Pensi"> Pensi</label>
+          <label><input type="radio" name="vote" value="Bakti Sosial"> Bakti Sosial</label>
         </form>
         <div id="voteResult" style="margin-top:8px;font-weight:800;color:var(--accentC)"></div>
       </div>
@@ -401,8 +397,7 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 <section id="siswa" aria-label="Daftar Siswa">
   <div class="container">
     <div class="section-title"><h2>Daftar Siswa</h2>
-      <div class="section-sub">Semua anggota XI-4 — bisa dicari & diurutkan. (2 kolom di HP)</div>
-    </div>
+      </div>
 
     <div class="siswa-controls">
       <input id="siswa-search" class="siswa-search" type="text" placeholder="🔍 Cari nama siswa..." aria-label="Cari nama siswa">
@@ -439,10 +434,10 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 
     <div class="hof-grid">
       <div class="hof-card card">
-        <div class="hof-trophy" style="font-size:2.2rem;color:var(--accentD)">🏆</div>
-        <img src="assets/1755172317026.jpg" alt="Juara Futsal" class="hof-img" loading="lazy">
-        <div class="hof-title" style="font-weight:800;margin-top:8px">Juara 1 Futsal Antar Kelas</div>
-        <div class="hof-desc text-muted" style="text-align:center;margin-top:6px">Classmeeting 2025</div>
+        <div class="hof-trophy" style="font-size:2rem;color:var(--accentA)">🏅</div>
+        <div class="hof-coming-soon">Coming<br>Soon</div>
+        <div class="hof-title" style="font-weight:800;margin-top:8px">Juara 1 Futsal</div>
+        <div class="hof-desc text-muted" style="text-align:center;margin-top:6px">Prestasi terbaru XI-4.</div>
       </div>
       <div class="hof-card card">
         <div class="hof-trophy" style="font-size:2rem;color:var(--accentA)">🏅</div>
@@ -530,7 +525,6 @@ document.addEventListener('DOMContentLoaded', () => {
       renderGallery(data.galeri);
       renderStats(data);
       setupSiswaControls();
-      setInspirasi(data.siswa);
 
     } catch (error) {
       console.error("Gagal memuat data kelas:", error);
@@ -627,11 +621,11 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!rosterBody) return;
 
       const jadwal = {
-        "Senin": ["Prakarya (2 les)", "Sosiologi (1 les)", "Fisika (2 les)", "Matematika (U) (2 les)", "B.Indonesia (2 les)"],
-        "Selasa": ["B.Inggris (3 les)", "Sosiologi (1 les)", "Matematika (TL) (3 les)", "Sejarah (1 les)", "Seni Rupa (2 les)"],
-        "Rabu": ["Matematika (U) (2 les)", "Geografi (2 les)", "Pjok (3 les)", "Agama (3 les)"],
-        "Kamis": ["Geografi (3 les)", "Sosiologi (2 les)", "B.Indonesia (2 les)", "Sejarah (1 les)", "Ppkn (2 les)"],
-        "Jum'at": ["Matematika (TL) (2 les)", "Sosiologi (1 les)", "Fisika (3 les)"]
+          "Senin": ["Prakarya (2 les)", "Sosiologi (1 les)", "Fisika (2 les)", "Matematika (U) (2 les)", "B.Indonesia (2 les)"],
+          "Selasa": ["B.Inggris (3 les)", "Sosiologi (1 les)", "Matematika (TL) (3 les)", "Sejarah (1 les)", "Seni Rupa (2 les)"],
+          "Rabu": ["Matematika (U) (2 les)", "Geografi (2 les)", "Pjok (3 les)", "Agama (3 les)"],
+          "Kamis": ["Geografi (3 les)", "Sosiologi (2 les)", "B.Indonesia (2 les)", "Sejarah (1 les)", "Ppkn (2 les)"],
+          "Jum'at": ["Matematika (TL) (2 les)", "Sosiologi (1 les)", "Fisika (3 les)"]
       };
 
       let html = '';
@@ -642,15 +636,6 @@ document.addEventListener('DOMContentLoaded', () => {
           html += `</tr>`;
       }
       rosterBody.innerHTML = html;
-  }
-
-
-  function setInspirasi(siswaData) {
-    const el = $('#siswa-inspiratif');
-    if (el && siswaData && siswaData.length > 0) {
-       const randomSiswa = siswaData[Math.floor(Math.random() * siswaData.length)];
-       el.textContent = randomSiswa.nama;
-    }
   }
 
   // ===============================================
@@ -781,7 +766,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Voting Form
     const voteForm = $('#voteForm');
     if(voteForm) {
-        let voteCount = {Ekskul:2,Classmeeting:3,Piket:1,Outing:2};
+        let voteCount = {Ekskul:2, Classmeeting:3, "Studi Tur":1, Pensi:4, "Bakti Sosial":2};
         voteForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const val = voteForm.vote && voteForm.vote.value;
