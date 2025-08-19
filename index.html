@@ -396,8 +396,9 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 
 <section id="siswa" aria-label="Daftar Siswa">
   <div class="container">
-    <div class="section-title"><h2>Daftar Siswa</h2>
-      </div>
+    <div class="section-title">
+        <h2>Daftar Siswa</h2>
+    </div>
 
     <div class="siswa-controls">
       <input id="siswa-search" class="siswa-search" type="text" placeholder="🔍 Cari nama siswa..." aria-label="Cari nama siswa">
@@ -452,12 +453,12 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 <section id="feedback">
   <div class="container">
     <div class="section-title"><h2>Aspirasi & Saran</h2>
-      <div class="section-sub">Kirim masukan, kritik, atau ide untuk website dan kelas kita. Admin akan membaca semua aspirasi!</div>
+      <div class="section-sub">Kirim masukan, kritik, atau ide untuk website dan kelas kita.</div>
     </div>
 
-    <form class="feedback" id="feedbackForm">
-      <input type="text" id="fb-nama" placeholder="Nama (boleh anonim)" autocomplete="off" required>
-      <textarea id="fb-isi" placeholder="Tulis aspirasimu..." rows="3" required></textarea>
+    <form class="feedback" action="https://formspree.io/f/xqalvelz" method="POST">
+      <input type="text" name="Nama_Pengirim" id="fb-nama" placeholder="Nama (boleh anonim)" autocomplete="off" required>
+      <textarea name="Isi_Aspirasi" id="fb-isi" placeholder="Tulis aspirasimu..." rows="3" required></textarea>
       <button type="submit">Kirim Aspirasi</button>
     </form>
 
@@ -621,17 +622,17 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!rosterBody) return;
 
       const jadwal = {
-          "Senin": ["Prakarya (2 les)", "Sosiologi (1 les)", "Fisika (2 les)", "Matematika (U) (2 les)", "B.Indonesia (2 les)"],
-          "Selasa": ["B.Inggris (3 les)", "Sosiologi (1 les)", "Matematika (TL) (3 les)", "Sejarah (1 les)", "Seni Rupa (2 les)"],
-          "Rabu": ["Matematika (U) (2 les)", "Geografi (2 les)", "Pjok (3 les)", "Agama (3 les)"],
-          "Kamis": ["Geografi (3 les)", "Sosiologi (2 les)", "B.Indonesia (2 les)", "Sejarah (1 les)", "Ppkn (2 les)"],
-          "Jum'at": ["Matematika (TL) (2 les)", "Sosiologi (1 les)", "Fisika (3 les)"]
+        "Senin": ["Prakarya (2 les)", "Sosiologi (1 les)", "Fisika (2 les)", "Matematika (U) (2 les)", "B.Indonesia (2 les)"],
+        "Selasa": ["B.Inggris (3 les)", "Sosiologi (1 les)", "Matematika (TL) (3 les)", "Sejarah (1 les)", "Seni Rupa (2 les)"],
+        "Rabu": ["Matematika (U) (2 les)", "Geografi (2 les)", "Pjok (3 les)", "Agama (3 les)"],
+        "Kamis": ["Geografi (3 les)", "Sosiologi (2 les)", "B.Indonesia (2 les)", "Sejarah (1 les)", "Ppkn (2 les)"],
+        "Jum'at": ["Matematika (TL) (2 les)", "Sosiologi (1 les)", "Fisika (3 les)"]
       };
 
       let html = '';
       for (const hari in jadwal) {
           html += `<tr>`;
-          html += `<td>${hari}</td>`;
+          html += `<td><b>${hari}</b></td>`;
           html += `<td>${jadwal[hari].join('<br>')}</td>`;
           html += `</tr>`;
       }
@@ -753,13 +754,27 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    // Feedback Form
+    // Feedback Form (sudah terhubung ke Formspree)
     const feedbackForm = $('#feedbackForm');
     if(feedbackForm) {
-      feedbackForm.addEventListener('submit', (e) => {
+      feedbackForm.addEventListener('submit', e => {
         e.preventDefault();
-        showToast('Aspirasi terkirim! (Ini hanya demo)', 3500);
-        feedbackForm.reset();
+        const form = e.target;
+        const data = new FormData(form);
+        fetch(form.action, {
+          method: form.method,
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        }).then(response => {
+          if (response.ok) {
+            showToast('Aspirasi berhasil terkirim! Terima kasih.');
+            form.reset();
+          } else {
+            showToast('Oops! Gagal mengirim aspirasi. Coba lagi.');
+          }
+        }).catch(error => {
+          showToast('Oops! Ada masalah jaringan. Coba lagi.');
+        });
       });
     }
     
