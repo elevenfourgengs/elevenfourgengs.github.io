@@ -631,31 +631,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const $$ = sel => Array.from(document.querySelectorAll(sel));
 
   // Fungsi Render Mading (dibuat global agar bisa diakses dari script module)
-  window.renderMading = (pengumumanData) => {
-      const madingContent = $('#mading-content');
-      if (!madingContent) return;
 
-      if (pengumumanData.length === 0) {
-          madingContent.innerHTML = '<p class="text-muted">Belum ada pengumuman terbaru.</p>';
-          return;
-      }
+  // Fungsi Render Mading (dibuat global agar bisa diakses dari script module)
+window.renderMading = (pengumumanData) => {
+    const madingContent = $('#mading-content');
+    if (!madingContent) return;
 
-      madingContent.innerHTML = pengumumanData.map(p => {
-          // Cek dulu apakah p.tanggal itu ada dan valid
-          const tanggal = p.tanggal && p.tanggal.toDate ? p.tanggal.toDate().toLocaleDateString('id-ID', {
-              day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-          }) : 'Waktu tidak tersedia';
-          
-          const isi = p.isi || '[Tidak ada konten]';
+    if (pengumumanData.length === 0) {
+        madingContent.innerHTML = '<p class="text-muted">Belum ada pengumuman terbaru.</p>';
+        return;
+    }
 
-          return `
-            <div class="mading-card">
-                <div class="timestamp">${tanggal} WIB</div>
-                <div class="content">${isi.replace(/\n/g, '<br>')}</div>
-            </div>
-          `;
-      }).join('');
-  };
+    madingContent.innerHTML = pengumumanData.map(p => {
+        let tanggalObj;
+        // Pengecekan Cerdas: Cek apakah p.tanggal punya .toDate()
+        if (p.tanggal && typeof p.tanggal.toDate === 'function') {
+            // Jika iya, ini objek Timestamp normal dari Firebase
+            tanggalObj = p.tanggal.toDate();
+        } else if (p.tanggal && p.tanggal.seconds) {
+            // Jika tidak, tapi punya .seconds, kita ubah manual
+            tanggalObj = new Date(p.tanggal.seconds * 1000);
+        } else {
+            // Jika tidak ada data tanggal sama sekali, tampilkan pesan fallback
+            const isi = p.isi || '[Tidak ada konten]';
+            return `
+              <div class="mading-card">
+                  <div class="timestamp">Waktu tidak tersedia</div>
+                  <div class="content">${isi.replace(/\n/g, '<br>')}</div>
+              </div>
+            `;
+        }
+
+        const tanggalFormatted = tanggalObj.toLocaleDateString('id-ID', {
+            day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+        });
+        
+        const isi = p.isi || '[Tidak ada konten]';
+
+        return `
+          <div class="mading-card">
+              <div class="timestamp">${tanggalFormatted} WIB</div>
+              <div class="content">${isi.replace(/\n/g, '<br>')}</div>
+          </div>
+        `;
+    }).join('');
+};
 
   /* Toast */
   function showToast(txt, duration = 2600){
