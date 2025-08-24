@@ -629,43 +629,51 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Helpers */
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
-
-  // Fungsi Render Mading (dibuat global agar bisa diakses dari script module)
-
-  // Fungsi Render Mading (dibuat global agar bisa diakses dari script module)
+// Fungsi Render Mading (VERSI INVESTIGASI)
 window.renderMading = (pengumumanData) => {
     const madingContent = $('#mading-content');
-    if (!madingContent) return;
+    if (!madingContent) {
+        console.error("INVESTIGASI GAGAL: Elemen #mading-content tidak ditemukan!");
+        return;
+    }
+
+    console.log("LAPORAN: Menerima data untuk dirender:", pengumumanData);
 
     if (pengumumanData.length === 0) {
         madingContent.innerHTML = '<p class="text-muted">Belum ada pengumuman terbaru.</p>';
         return;
     }
 
-    madingContent.innerHTML = pengumumanData.map(p => {
+    madingContent.innerHTML = pengumumanData.map((p, index) => {
+        console.log(`--- MEMPROSES PENGUMUMAN #${index + 1} ---`);
+        console.log("DATA MENTAH p.tanggal:", p.tanggal);
+
         let tanggalObj;
-        // Pengecekan Cerdas: Cek apakah p.tanggal punya .toDate()
         if (p.tanggal && typeof p.tanggal.toDate === 'function') {
-            // Jika iya, ini objek Timestamp normal dari Firebase
+            console.log("INFO: Data terdeteksi sebagai objek Timestamp Firebase (Jalur 1).");
             tanggalObj = p.tanggal.toDate();
         } else if (p.tanggal && p.tanggal.seconds) {
-            // Jika tidak, tapi punya .seconds, kita ubah manual
+            console.log("INFO: Data terdeteksi sebagai objek dengan .seconds (Jalur 2).");
             tanggalObj = new Date(p.tanggal.seconds * 1000);
         } else {
-            // Jika tidak ada data tanggal sama sekali, tampilkan pesan fallback
+            console.error("ERROR: Format data tanggal tidak dikenali (Jalur 3).");
+            tanggalObj = null; 
+        }
+
+        console.log("HASIL PROSES -> Objek Date:", tanggalObj);
+
+        if (!tanggalObj || isNaN(tanggalObj.getTime())) {
+            console.error("ERROR FINAL: Objek tanggal tidak valid!");
             const isi = p.isi || '[Tidak ada konten]';
-            return `
-              <div class="mading-card">
-                  <div class="timestamp">Waktu tidak tersedia</div>
-                  <div class="content">${isi.replace(/\n/g, '<br>')}</div>
-              </div>
-            `;
+            return `<div class="mading-card"><div class="timestamp">Waktu Gagal Diproses</div><div class="content">${isi.replace(/\n/g, '<br>')}</div></div>`;
         }
 
         const tanggalFormatted = tanggalObj.toLocaleDateString('id-ID', {
             day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
         });
-        
+
+        console.log("HASIL FORMAT:", tanggalFormatted);
+
         const isi = p.isi || '[Tidak ada konten]';
 
         return `
