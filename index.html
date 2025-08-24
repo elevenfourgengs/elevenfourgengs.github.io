@@ -591,11 +591,9 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" defer></script>
 
 <script type="module">
-  // Import fungsi yang kita butuhkan dari Firebase SDK
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
   import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
 
-  // Konfigurasi Firebase dari akun lo (SUDAH DIPERBAIKI)
   const firebaseConfig = {
     apiKey: "AIzaSyDxOGzerbdJXnUO93i7wjIWUYpeICu9kyw",
     authDomain: "elevenfourgengs.firebaseapp.com",
@@ -606,19 +604,21 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
     measurementId: "G-E6YJZP6BPX"
   };
 
-  // Inisialisasi Firebase
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  // Ini "telinga" yang akan mendengarkan database pengumuman, diurutkan dari yang paling baru
-  const q = query(collection(db, "pengumuman"), orderBy("tanggal", "desc"));
-  onSnapshot(q, (querySnapshot) => {
-    const pengumuman = [];
-    querySnapshot.forEach((doc) => {
-        pengumuman.push(doc.data());
-    });
-    // Kirim data ke fungsi renderMading di script utama
-    window.renderMading(pengumuman);
+  // Telinga untuk Pengumuman (sudah ada)
+  const qPengumuman = query(collection(db, "pengumuman"), orderBy("tanggal", "desc"));
+  onSnapshot(qPengumuman, (snapshot) => {
+    const data = snapshot.docs.map(doc => doc.data());
+    window.renderMading(data);
+  });
+
+  // Telinga BARU untuk Agenda
+  const qAgenda = query(collection(db, "agenda"), orderBy("tanggal", "desc"));
+  onSnapshot(qAgenda, (snapshot) => {
+    const data = snapshot.docs.map(doc => doc.data());
+    window.renderAgenda(data);
   });
 </script>
 <script>
@@ -629,61 +629,32 @@ document.addEventListener('DOMContentLoaded', () => {
   /* Helpers */
   const $ = sel => document.querySelector(sel);
   const $$ = sel => Array.from(document.querySelectorAll(sel));
-// Fungsi Render Mading (VERSI INVESTIGASI)
-window.renderMading = (pengumumanData) => {
-    const madingContent = $('#mading-content');
-    if (!madingContent) {
-        console.error("INVESTIGASI GAGAL: Elemen #mading-content tidak ditemukan!");
-        return;
-    }
 
-    console.log("LAPORAN: Menerima data untuk dirender:", pengumumanData);
+  // Fungsi Render Mading (dibuat global agar bisa diakses dari script module)
+  window.renderMading = (pengumumanData) => {
+      const madingContent = $('#mading-content');
+      if (!madingContent) return;
 
-    if (pengumumanData.length === 0) {
-        madingContent.innerHTML = '<p class="text-muted">Belum ada pengumuman terbaru.</p>';
-        return;
-    }
+      if (pengumumanData.length === 0) {
+          madingContent.innerHTML = '<p class="text-muted">Belum ada pengumuman terbaru.</p>';
+          return;
+      }
 
-    madingContent.innerHTML = pengumumanData.map((p, index) => {
-        console.log(`--- MEMPROSES PENGUMUMAN #${index + 1} ---`);
-        console.log("DATA MENTAH p.tanggal:", p.tanggal);
+      madingContent.innerHTML = pengumumanData.map(p => {
+          const tanggal = p.tanggal && p.tanggal.toDate ? p.tanggal.toDate().toLocaleDateString('id-ID', {
+              day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
+          }) : 'Waktu tidak tersedia';
+          
+          const isi = p.isi || '[Tidak ada konten]';
 
-        let tanggalObj;
-        if (p.tanggal && typeof p.tanggal.toDate === 'function') {
-            console.log("INFO: Data terdeteksi sebagai objek Timestamp Firebase (Jalur 1).");
-            tanggalObj = p.tanggal.toDate();
-        } else if (p.tanggal && p.tanggal.seconds) {
-            console.log("INFO: Data terdeteksi sebagai objek dengan .seconds (Jalur 2).");
-            tanggalObj = new Date(p.tanggal.seconds * 1000);
-        } else {
-            console.error("ERROR: Format data tanggal tidak dikenali (Jalur 3).");
-            tanggalObj = null; 
-        }
-
-        console.log("HASIL PROSES -> Objek Date:", tanggalObj);
-
-        if (!tanggalObj || isNaN(tanggalObj.getTime())) {
-            console.error("ERROR FINAL: Objek tanggal tidak valid!");
-            const isi = p.isi || '[Tidak ada konten]';
-            return `<div class="mading-card"><div class="timestamp">Waktu Gagal Diproses</div><div class="content">${isi.replace(/\n/g, '<br>')}</div></div>`;
-        }
-
-        const tanggalFormatted = tanggalObj.toLocaleDateString('id-ID', {
-            day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-        });
-
-        console.log("HASIL FORMAT:", tanggalFormatted);
-
-        const isi = p.isi || '[Tidak ada konten]';
-
-        return `
-          <div class="mading-card">
-              <div class="timestamp">${tanggalFormatted} WIB</div>
-              <div class="content">${isi.replace(/\n/g, '<br>')}</div>
-          </div>
-        `;
-    }).join('');
-};
+          return `
+            <div class="mading-card">
+                <div class="timestamp">${tanggal} WIB</div>
+                <div class="content">${isi.replace(/\n/g, '<br>')}</div>
+            </div>
+          `;
+      }).join('');
+  };
 
   /* Toast */
   function showToast(txt, duration = 2600){
@@ -705,7 +676,7 @@ window.renderMading = (pengumumanData) => {
       
       // Render content from data.json
       renderPiket(data.piket);
-      renderAgenda(data.agenda);
+      // renderAgenda(data.agenda); <-- DIHAPUS
       renderSiswa(data.siswa);
       renderGallery(data.galeri);
       renderStats(data);
@@ -747,10 +718,14 @@ window.renderMading = (pengumumanData) => {
 
   function renderAgenda(agendaData) {
     const agendaList = $('#agenda-list');
-    if(!agendaList || !agendaData) return;
-    const formatDate = (str) => {
-      const d = new Date(str);
-      if(isNaN(d)) return str;
+    if(!agendaList) return;
+    if(!agendaData || agendaData.length === 0) {
+        agendaList.innerHTML = '<p class="text-muted hcenter">Belum ada agenda kegiatan.</p>';
+        return;
+    }
+    const formatDate = (ts) => {
+      if (!ts || !ts.toDate) return 'Tanggal tidak valid';
+      const d = ts.toDate();
       const bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
       return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
     };
@@ -760,8 +735,8 @@ window.renderMading = (pengumumanData) => {
           <span class="badge">${item.kategori}</span>
           <span style="color:var(--accentA);font-weight:700;margin-left:8px">${formatDate(item.tanggal)}</span>
         </div>
-        <div style="font-size:1.02rem;font-weight:800;color:#fff;margin-top:6px">${item.title}</div>
-        <div style="color:var(--muted-weak);margin-top:6px">${item.desc}</div>
+        <div style="font-size:1.02rem;font-weight:800;color:#fff;margin-top:6px">${item.judul}</div>
+        <div style="color:var(--muted-weak);margin-top:6px">${item.deskripsi}</div>
       </div>
     `).join('');
   }
