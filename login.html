@@ -1,1 +1,80 @@
-
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Login - elevenfourgengs</title>
+        <!-- Memuat CSS Bootstrap untuk styling -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+        <!-- Memuat CSS kustom (pastikan file ini ada di assets/css/style.css) -->
+        <link rel="stylesheet" href="assets/css/style.css" />
+        <style>
+            /* Styling khusus untuk halaman login agar di tengah */
+            html, body {
+                height: 100%;
+                margin: 0;
+            }
+            .login-container {
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: #f8f9fa; /* Warna latar belakang */
+            }
+            .card {
+                min-width: 350px; /* Lebar minimum kartu login */
+            }
+        </style>
+      </head>
+      <body>
+        <div class="container-fluid login-container">
+          <div class="row h-100 justify-content-center align-items-center">
+            <div class="col-md-4">
+              <div class="card p-4 shadow-sm">
+                <h4 class="text-center mb-4">Login Profil Siswa</h4>
+                <!-- Area untuk menampilkan pesan alert (error/sukses) -->
+                <div id="alert-message" class="alert d-none" role="alert"></div>
+                <form id="login-form">
+                  <div class="form-group">
+                    <label for="email">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      required
+                      placeholder="Masukkan email"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="password">Password</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      required
+                      placeholder="Masukkan password"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-block"
+                  >
+                    Login
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Memuat Firebase SDK dari CDN -->
+        <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-auth.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+        <!-- Memuat file konfigurasi Firebase lokal kita -->
+        <script src="js/firebase-config.js"></script>
+        <!-- Memuat logika JavaScript untuk halaman login -->
+        <script src="js/login.js"></script>
+      </body>
+    </html>
+    
