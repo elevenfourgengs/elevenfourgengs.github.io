@@ -3,177 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - XI-4</title>
+    <title>Super Admin Panel - XI-4</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
     <style>
         :root{
-            --bg-900:#07070b;
-            --bg-800:#0f1116;
-            --card: rgba(18,22,30,0.62);
-            --glass-border: 1px solid rgba(255,255,255,0.03);
-            --accentA: #ff2fb3;
-            --accentB: #6a5cff;
-            --accentC: #00d4ff;
-            --muted: rgba(255,255,255,0.88);
-            --muted-weak: rgba(255,255,255,0.66);
-            --radius-sm: 10px;
+            --bg-900:#07070b; --bg-800:#0f1116; --card: rgba(18,22,30,0.62);
+            --glass-border: 1px solid rgba(255,255,255,0.03); --accentA: #ff2fb3;
+            --accentB: #6a5cff; --accentC: #00d4ff; --muted: rgba(255,255,255,0.88);
+            --muted-weak: rgba(255,255,255,0.66); --radius-sm: 10px;
             --shadow-1: 0 10px 30px rgba(0,0,0,0.6);
         }
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(180deg, var(--bg-900), var(--bg-800));
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        .container {
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-        }
-        .admin-card {
-            background: var(--card);
-            border: var(--glass-border);
-            border-radius: var(--radius-sm);
-            padding: 24px;
-            box-shadow: var(--shadow-1);
-        }
-        h1, h2 {
-            font-family: 'Poppins', sans-serif;
-            text-align: center;
-            color: var(--accentC);
-            margin-top: 0;
-        }
-        .form-group {
-            margin-bottom: 16px;
-        }
-        label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 10px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--glass-border);
-            border-radius: 6px;
-            color: var(--muted);
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-        textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-        button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            background: linear-gradient(90deg, var(--accentB), var(--accentA));
-            color: #fff;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        button:hover {
-            transform: scale(1.02);
-        }
-        .logout-btn {
-            background: transparent;
-            border: 1px solid var(--accentA);
-            margin-top: 16px;
-        }
-        #error-message {
-            color: #ff4d4d;
-            text-align: center;
-            margin-top: 16px;
-            font-weight: 600;
-            min-height: 1.2em;
-        }
-        #mading-list {
-            margin-top: 24px;
-            border-top: 1px solid var(--glass-border);
-            padding-top: 16px;
-        }
-        .mading-item {
-            background: rgba(0,0,0,0.2);
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-        }
-        .mading-item p {
-            margin: 0;
-            flex-grow: 1;
-            white-space: pre-wrap;
-            word-break: break-word;
-        }
-        .delete-btn {
-            background: #ff4d4d;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            cursor: pointer;
-            font-weight: bold;
-            flex-shrink: 0;
-            padding: 0;
-        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: linear-gradient(180deg, var(--bg-900), var(--bg-800)); color: var(--muted); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px 0; }
+        .container { width: 100%; max-width: 800px; padding: 20px; }
+        .admin-card { background: var(--card); border: var(--glass-border); border-radius: var(--radius-sm); padding: 24px; box-shadow: var(--shadow-1); margin-bottom: 24px; }
+        h1, h2 { font-family: 'Poppins', sans-serif; text-align: center; color: var(--accentC); margin-top: 0; }
+        .form-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; }
+        input, textarea, select { width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 6px; color: var(--muted); font-size: 1rem; box-sizing: border-box; }
+        textarea { min-height: 100px; resize: vertical; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 6px; background: linear-gradient(90deg, var(--accentB), var(--accentA)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
+        button:hover { transform: scale(1.02); }
+        .logout-btn { background: transparent; border: 1px solid var(--accentA); margin-top: 16px; }
+        #error-message { color: #ff4d4d; text-align: center; margin-top: 16px; font-weight: 600; min-height: 1.2em; }
+        .item-list { margin-top: 24px; border-top: 1px solid var(--glass-border); padding-top: 16px; max-height: 300px; overflow-y: auto;}
+        .list-item { background: rgba(0,0,0,0.2); padding: 12px; border-radius: 6px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+        .list-item .info { flex-grow: 1; }
+        .list-item .info p { margin: 0; white-space: pre-wrap; word-break: break-word; }
+        .list-item .info .meta { font-size: 0.8rem; color: var(--muted-weak); margin-top: 4px;}
+        .delete-btn { background: #ff4d4d; color: white; border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-weight: bold; flex-shrink: 0; padding: 0; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="login-container" class="admin-card">
-            <h1>Login Admin XI-4</h1>
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required>
-                </div>
-                <button type="submit">Login</button>
-                <p id="error-message"></p>
-            </form>
+            <h1>Login Super Admin XI-4</h1>
+            <form id="login-form"><div class="form-group"><label for="email">Email</label><input type="email" id="email" required></div><div class="form-group"><label for="password">Password</label><input type="password" id="password" required></div><button type="submit">Login</button><p id="error-message"></p></form>
         </div>
 
-        <div id="admin-panel" class="admin-card" style="display: none;">
-            <h1>Mading Digital Manager</h1>
-            <p>Selamat datang, <span id="admin-email"></span>!</p>
+        <div id="admin-panel" style="display: none;">
+            <div class="admin-card">
+                <h1>Super Admin Panel</h1>
+                <p style="text-align: center;">Selamat datang, <span id="admin-email"></span>!</p>
+                <button id="logout-btn" class="logout-btn">Logout</button>
+            </div>
             
-            <form id="add-mading-form">
-                <div class="form-group">
-                    <label for="mading-text">Tulis Pengumuman Baru:</label>
-                    <textarea id="mading-text" required></textarea>
-                </div>
-                <button type="submit">Tempel ke Mading</button>
-            </form>
-
-            <div id="mading-list-container">
-                <h2>Daftar Pengumuman</h2>
-                <div id="mading-list">Memuat pengumuman...</div>
+            <div class="admin-card">
+                <h2>Kelola Mading Digital</h2>
+                <form id="add-mading-form"><div class="form-group"><label for="mading-text">Tulis Pengumuman Baru:</label><textarea id="mading-text" required></textarea></div><button type="submit">Tempel ke Mading</button></form>
+                <div class="item-list" id="mading-list">Memuat pengumuman...</div>
             </div>
 
-            <button id="logout-btn" class="logout-btn">Logout</button>
+            <div class="admin-card">
+                <h2>Kelola Agenda Kegiatan</h2>
+                <form id="add-agenda-form">
+                    <div class="form-group"><label for="agenda-judul">Judul Agenda</label><input type="text" id="agenda-judul" required></div>
+                    <div class="form-group"><label for="agenda-tanggal">Tanggal</label><input type="date" id="agenda-tanggal" required style="color-scheme: dark;"></div>
+                    <div class="form-group"><label for="agenda-kategori">Kategori</label><select id="agenda-kategori" required><option value="Ujian">Ujian</option><option value="Kegiatan">Kegiatan</option><option value="Ekstrakurikuler">Ekstrakurikuler</option><option value="Lainnya">Lainnya</option></select></div>
+                    <div class="form-group"><label for="agenda-deskripsi">Deskripsi</label><textarea id="agenda-deskripsi" required></textarea></div>
+                    <button type="submit">Tambah Agenda</button>
+                </form>
+                <div class="item-list" id="agenda-list">Memuat agenda...</div>
+            </div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, deleteDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
 
         const firebaseConfig = {
@@ -191,6 +88,7 @@
         const auth = getAuth(app);
 
         const pengumumanCol = collection(db, "pengumuman");
+        const agendaCol = collection(db, "agenda");
 
         const loginContainer = document.getElementById('login-container');
         const adminPanel = document.getElementById('admin-panel');
@@ -198,9 +96,6 @@
         const errorMessage = document.getElementById('error-message');
         const adminEmail = document.getElementById('admin-email');
         const logoutBtn = document.getElementById('logout-btn');
-        const addMadingForm = document.getElementById('add-mading-form');
-        const madingText = document.getElementById('mading-text');
-        const madingList = document.getElementById('mading-list');
 
         onAuthStateChanged(auth, user => {
             if (user) {
@@ -208,66 +103,85 @@
                 adminPanel.style.display = 'block';
                 adminEmail.textContent = user.email;
                 loadPengumuman();
+                loadAgenda();
             } else {
                 loginContainer.style.display = 'block';
                 adminPanel.style.display = 'none';
             }
         });
 
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            errorMessage.textContent = 'Mencoba login...';
-            const email = loginForm.email.value;
-            const password = loginForm.password.value;
-            signInWithEmailAndPassword(auth, email, password)
-                .catch(error => {
-                    errorMessage.textContent = 'Email atau password salah!';
-                });
-        });
+        loginForm.addEventListener('submit', (e) => { e.preventDefault(); errorMessage.textContent = 'Mencoba login...'; signInWithEmailAndPassword(auth, loginForm.email.value, loginForm.password.value).catch(error => { errorMessage.textContent = 'Email atau password salah!'; }); });
+        logoutBtn.addEventListener('click', () => signOut(auth));
 
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth);
-        });
-
-        addMadingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            addDoc(pengumumanCol, {
-                isi: madingText.value,
-                tanggal: serverTimestamp()
-            }).then(() => {
-                madingText.value = '';
-            });
-        });
-        
+        // Mading Logic
+        const addMadingForm = document.getElementById('add-mading-form');
+        const madingText = document.getElementById('mading-text');
+        const madingList = document.getElementById('mading-list');
+        addMadingForm.addEventListener('submit', (e) => { e.preventDefault(); addDoc(pengumumanCol, { isi: madingText.value, tanggal: serverTimestamp() }).then(() => madingText.value = ''); });
         function loadPengumuman() {
             const q = query(pengumumanCol, orderBy("tanggal", "desc"));
             onSnapshot(q, (snapshot) => {
-                madingList.innerHTML = '';
-                if (snapshot.docs.length === 0) {
-                    madingList.innerHTML = '<p>Belum ada pengumuman.</p>';
-                }
+                madingList.innerHTML = snapshot.docs.length === 0 ? '<p>Belum ada pengumuman.</p>' : '';
                 snapshot.docs.forEach(docSnapshot => {
-                    const data = docSnapshot.data();
-                    const item = document.createElement('div');
-                    item.className = 'mading-item';
-                    
-                    const p = document.createElement('p');
-                    p.textContent = data.isi;
-                    
-                    const deleteBtn = document.createElement('button');
-                    deleteBtn.className = 'delete-btn';
-                    deleteBtn.textContent = 'X';
-                    deleteBtn.addEventListener('click', () => {
-                        if(confirm('Yakin mau hapus pengumuman ini?')) {
-                            deleteDoc(doc(db, 'pengumuman', docSnapshot.id));
-                        }
-                    });
-                    
-                    item.appendChild(p);
-                    item.appendChild(deleteBtn);
+                    const item = createListItem(docSnapshot, 'isi', true);
                     madingList.appendChild(item);
                 });
             });
+        }
+        
+        // Agenda Logic
+        const addAgendaForm = document.getElementById('add-agenda-form');
+        const agendaList = document.getElementById('agenda-list');
+        addAgendaForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const dateInput = document.getElementById('agenda-tanggal').value;
+            const [year, month, day] = dateInput.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+
+            addDoc(agendaCol, {
+                judul: document.getElementById('agenda-judul').value,
+                tanggal: Timestamp.fromDate(date),
+                kategori: document.getElementById('agenda-kategori').value,
+                deskripsi: document.getElementById('agenda-deskripsi').value
+            }).then(() => addAgendaForm.reset());
+        });
+        function loadAgenda() {
+            const q = query(agendaCol, orderBy("tanggal", "desc"));
+            onSnapshot(q, (snapshot) => {
+                agendaList.innerHTML = snapshot.docs.length === 0 ? '<p>Belum ada agenda.</p>' : '';
+                snapshot.docs.forEach(docSnapshot => {
+                    const data = docSnapshot.data();
+                    const infoHtml = `<p><b>${data.judul}</b></p><p class="meta">${data.kategori} - ${data.tanggal.toDate().toLocaleDateString('id-ID', {day:'numeric', month:'long', year:'numeric'})}</p>`;
+                    const item = createListItem(docSnapshot, infoHtml, false);
+                    agendaList.appendChild(item);
+                });
+            });
+        }
+        
+        // Helper function to create list items for both Mading and Agenda
+        function createListItem(docSnapshot, contentKeyOrHtml, isSimpleText = true) {
+            const item = document.createElement('div');
+            item.className = 'list-item';
+            const info = document.createElement('div');
+            info.className = 'info';
+            if (isSimpleText) {
+                const p = document.createElement('p');
+                p.textContent = docSnapshot.data()[contentKeyOrHtml];
+                info.appendChild(p);
+            } else {
+                info.innerHTML = contentKeyOrHtml;
+            }
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = 'X';
+            deleteBtn.addEventListener('click', () => {
+                if(confirm('Yakin mau hapus item ini?')) { 
+                    deleteDoc(doc(db, docSnapshot.ref.parent.id, docSnapshot.id)); 
+                }
+            });
+            item.appendChild(info);
+            item.appendChild(deleteBtn);
+            return item;
         }
     </script>
 </body>
