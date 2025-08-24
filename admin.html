@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - XI-4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root{
+            --bg-900:#07070b;
+            --bg-800:#0f1116;
+            --card: rgba(18,22,30,0.62);
+            --glass-border: 1px solid rgba(255,255,255,0.03);
+            --accentA: #ff2fb3;
+            --accentB: #6a5cff;
+            --accentC: #00d4ff;
+            --muted: rgba(255,255,255,0.88);
+            --muted-weak: rgba(255,255,255,0.66);
+            --radius-sm: 10px;
+            --shadow-1: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, var(--bg-900), var(--bg-800));
+            color: var(--muted);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+        }
+        .admin-card {
+            background: var(--card);
+            border: var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 24px;
+            box-shadow: var(--shadow-1);
+        }
+        h1, h2 {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            color: var(--accentC);
+            margin-top: 0;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 6px;
+            color: var(--muted);
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(90deg, var(--accentB), var(--accentA));
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.02);
+        }
+        .logout-btn {
+            background: transparent;
+            border: 1px solid var(--accentA);
+            margin-top: 16px;
+        }
+        #error-message {
+            color: #ff4d4d;
+            text-align: center;
+            margin-top: 16px;
+            font-weight: 600;
+            min-height: 1.2em;
+        }
+        #mading-list {
+            margin-top: 24px;
+            border-top: 1px solid var(--glass-border);
+            padding-top: 16px;
+        }
+        .mading-item {
+            background: rgba(0,0,0,0.2);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .mading-item p {
+            margin: 0;
+            flex-grow: 1;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .delete-btn {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            flex-shrink: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="login-container" class="admin-card">
+            <h1>Login Admin XI-4</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+                <p id="error-message"></p>
+            </form>
+        </div>
+
+        <div id="admin-panel" class="admin-card" style="display: none;">
+            <h1>Mading Digital Manager</h1>
+            <p>Selamat datang, <span id="admin-email"></span>!</p>
+            
+            <form id="add-mading-form">
+                <div class="form-group">
+                    <label for="mading-text">Tulis Pengumuman Baru:</label>
+                    <textarea id="mading-text" required></textarea>
+                </div>
+                <button type="submit">Tempel ke Mading</button>
+            </form>
+
+            <div id="mading-list-container">
+                <h2>Daftar Pengumuman</h2>
+                <div id="mading-list">Memuat pengumuman...</div>
+            </div>
+
+            <button id="logout-btn" class="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxOGzerbdJXnUO93i7wjIWUYpeICu9kyw",
+            authDomain: "elevenfourgengs.firebaseapp.com",
+            projectId: "elevenfourgengs",
+            storageBucket: "elevenfourgengs.firebasestorage.app",
+            messagingSenderId: "322756405034",
+            appId: "1:322756405034:web:a42662d8dcd420a91d2053",
+            measurementId: "G-E6YJZP6BPX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const pengumumanCol = collection(db, "pengumuman");
+
+        const loginContainer = document.getElementById('login-container');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginForm = document.getElementById('login-form');
+        const errorMessage = document.getElementById('error-message');
+        const adminEmail = document.getElementById('admin-email');
+        const logoutBtn = document.getElementById('logout-btn');
+        const addMadingForm = document.getElementById('add-mading-form');
+        const madingText = document.getElementById('mading-text');
+        const madingList = document.getElementById('mading-list');
+
+        onAuthStateChanged(auth, user => {
+            if (user) {
+                loginContainer.style.display = 'none';
+                adminPanel.style.display = 'block';
+                adminEmail.textContent = user.email;
+                loadPengumuman();
+            } else {
+                loginContainer.style.display = 'block';
+                adminPanel.style.display = 'none';
+            }
+        });
+
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            errorMessage.textContent = 'Mencoba login...';
+            const email = loginForm.email.value;
+            const password = loginForm.password.value;
+            signInWithEmailAndPassword(auth, email, password)
+                .catch(error => {
+                    errorMessage.textContent = 'Email atau password salah!';
+                });
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth);
+        });
+
+        addMadingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            addDoc(pengumumanCol, {
+                isi: madingText.value,
+                tanggal: serverTimestamp()
+            }).then(() => {
+                madingText.value = '';
+            });
+        });
+        
+        function loadPengumuman() {
+            const q = query(pengumumanCol, orderBy("tanggal", "desc"));
+            onSnapshot(q, (snapshot) => {
+                madingList.innerHTML = '';
+                if (snapshot.docs.length === 0) {
+                    madingList.innerHTML = '<p>Belum ada pengumuman.</p>';
+                }
+                snapshot.docs.forEach(docSnapshot => {
+                    const data = docSnapshot.data();
+                    const item = document.createElement('div');
+                    item.className = 'mading-item';
+                    
+                    const p = document.createElement('p');
+                    p.textContent = data.isi;
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'delete-btn';
+                    deleteBtn.textContent = 'X';
+                    deleteBtn.addEventListener('click', () => {
+                        if(confirm('Yakin mau hapus pengumuman ini?')) {
+                            deleteDoc(doc(db, 'pengumuman', docSnapshot.id));
+                        }
+                    });
+                    
+                    item.appendChild(p);
+                    item.appendChild(deleteBtn);
+                    madingList.appendChild(item);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
