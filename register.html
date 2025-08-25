@@ -11,7 +11,7 @@
             --bg-900:#07070b; --bg-800:#0f1116; --card: rgba(18,22,30,0.85);
             --glass-border: 1px solid rgba(255,255,255,0.05); --accentA: #ff2fb3;
             --accentB: #6a5cff; --accentC: #00d4ff; --muted: rgba(255,255,255,0.88);
-            --radius-sm: 10px; --shadow-1: 0 10px 40px rgba(0,0,0,0.7);
+            --muted-weak: rgba(255,255,255,0.66); --radius-sm: 10px; --shadow-1: 0 10px 40px rgba(0,0,0,0.7);
         }
         body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-800); color: var(--muted); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
         .container { width: 100%; max-width: 450px; }
@@ -24,10 +24,10 @@
         input { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 6px; color: var(--muted); font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s; }
         input:focus { border-color: var(--accentC); outline: none; }
         .password-wrapper { position: relative; }
-        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted-weak); cursor: pointer; }
+        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(50%); color: var(--muted-weak); cursor: pointer; }
         button { width: 100%; padding: 12px; border: none; border-radius: 6px; background: linear-gradient(90deg, var(--accentB), var(--accentA)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
         button:hover { transform: scale(1.02); box-shadow: 0 5px 20px rgba(106, 92, 255, 0.3); }
-        button:disabled { background: #555; cursor: not-allowed; }
+        button:disabled { background: #555; cursor: not-allowed; opacity: 0.7; }
         #message { text-align: center; margin-top: 16px; font-weight: 600; min-height: 1.2em; transition: color 0.3s; }
         .success { color: #22ffbb; }
         .error { color: #ff4d4d; }
@@ -49,10 +49,12 @@
                     <label for="email">Email Aktif</label>
                     <input type="email" id="email" required>
                 </div>
-                <div class="form-group password-wrapper">
+                <div class="form-group">
                     <label for="password">Buat Password (min. 6 karakter)</label>
-                    <input type="password" id="password" minlength="6" required>
-                    <i class="ri-eye-line password-toggle" id="password-toggle"></i>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" minlength="6" required>
+                        <i class="ri-eye-line password-toggle" id="password-toggle"></i>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="secret-code">Kode Rahasia Kelas</label>
@@ -62,7 +64,7 @@
                 <p id="message"></p>
             </form>
             <div class="login-link">
-                <p>Sudah punya akun? <a href="admin.html">Login di sini</a></p>
+                <p>Sudah punya akun? <a href="login.html">Login di sini</a></p>
             </div>
         </div>
     </div>
@@ -70,10 +72,10 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
 
         // --- PENTING: GANTI KODE RAHASIA DI SINI ---
-        const KODE_RAHASIA_KELAS = 'XI4WEBSITE';
+        const KODE_RAHASIA_KELAS = 'XI4JUARA';
         // -----------------------------------------
 
         const firebaseConfig = {
@@ -96,7 +98,6 @@
         const passwordInput = document.getElementById('password');
         const passwordToggle = document.getElementById('password-toggle');
 
-        // Fungsi untuk menampilkan/menyembunyikan password
         passwordToggle.addEventListener('click', () => {
             const isPassword = passwordInput.type === 'password';
             passwordInput.type = isPassword ? 'text' : 'password';
@@ -116,8 +117,7 @@
             messageEl.textContent = 'Mendaftarkan...';
             messageEl.className = '';
 
-            // 1. Validasi Kode Rahasia
-            if (secretCode !== KODE_RAHASIA_KELAS) {
+            if (secretCode.toLowerCase() !== KODE_RAHASIA_KELAS.toLowerCase()) {
                 messageEl.textContent = 'Kode Rahasia Kelas salah!';
                 messageEl.className = 'error';
                 submitBtn.disabled = false;
@@ -125,32 +125,42 @@
             }
 
             try {
-                // 2. Buat user di Firebase Authentication
+                // 1. Buat user di Firebase Authentication
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // 3. Buat dokumen user di koleksi 'users'
+                // 2. Buat dokumen user di koleksi 'users'
                 await setDoc(doc(db, 'users', user.uid), {
                     nama: nama,
                     email: user.email
                 });
 
-                // 4. Buat dokumen profil publik di koleksi 'profiles'
+                // 3. Buat dokumen profil publik di koleksi 'profiles'
                 await setDoc(doc(db, 'profiles', user.uid), {
                     nama: nama,
+                    namaPanggilan: '',
                     motto: 'Siswa XI-4 yang keren!',
                     instagram: '',
-                    fotoURL: 'default-avatar.png', // Nama file default
+                    fotoURL: 'default-avatar.png',
                     userId: user.uid
                 });
 
-                messageEl.textContent = 'Pendaftaran berhasil! Silakan login.';
+                // 4. (IMPROVEMENT) Langsung login setelah daftar
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                messageEl.textContent = 'Pendaftaran berhasil! Mengarahkan ke halaman profil...';
                 messageEl.className = 'success';
-                registerForm.reset();
+                
+                // 5. (IMPROVEMENT) Arahkan ke halaman profil
+                setTimeout(() => {
+                    window.location.href = 'profil.html';
+                }, 1500);
 
             } catch (error) {
                 if (error.code === 'auth/email-already-in-use') {
                     messageEl.textContent = 'Email ini sudah terdaftar!';
+                } else if (error.code === 'auth/weak-password') {
+                    messageEl.textContent = 'Password terlalu lemah! (min. 6 karakter)';
                 } else {
                     messageEl.textContent = 'Terjadi error. Coba lagi.';
                 }
@@ -161,4 +171,3 @@
     </script>
 </body>
 </html>
-
