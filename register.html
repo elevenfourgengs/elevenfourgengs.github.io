@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Akun - XI-4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        :root{
+            --bg-900:#07070b; --bg-800:#0f1116; --card: rgba(18,22,30,0.85);
+            --glass-border: 1px solid rgba(255,255,255,0.05); --accentA: #ff2fb3;
+            --accentB: #6a5cff; --accentC: #00d4ff; --muted: rgba(255,255,255,0.88);
+            --radius-sm: 10px; --shadow-1: 0 10px 40px rgba(0,0,0,0.7);
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg-800); color: var(--muted); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .container { width: 100%; max-width: 450px; }
+        .register-card { background: var(--card); border: var(--glass-border); border-radius: var(--radius-sm); padding: 32px; box-shadow: var(--shadow-1); backdrop-filter: blur(10px); position: relative; overflow: hidden; }
+        .glow-effect { position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(106, 92, 255, 0.2), transparent 40%), radial-gradient(circle, rgba(0, 212, 255, 0.15), transparent 50%); animation: rotate 20s linear infinite; z-index: -1; }
+        @keyframes rotate { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        h1 { font-family: 'Poppins', sans-serif; text-align: center; color: var(--accentC); margin-top: 0; margin-bottom: 24px; }
+        .form-group { margin-bottom: 18px; position: relative; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; }
+        input { width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); border-radius: 6px; color: var(--muted); font-size: 1rem; box-sizing: border-box; transition: border-color 0.3s; }
+        input:focus { border-color: var(--accentC); outline: none; }
+        .password-wrapper { position: relative; }
+        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: var(--muted-weak); cursor: pointer; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 6px; background: linear-gradient(90deg, var(--accentB), var(--accentA)); color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+        button:hover { transform: scale(1.02); box-shadow: 0 5px 20px rgba(106, 92, 255, 0.3); }
+        button:disabled { background: #555; cursor: not-allowed; }
+        #message { text-align: center; margin-top: 16px; font-weight: 600; min-height: 1.2em; transition: color 0.3s; }
+        .success { color: #22ffbb; }
+        .error { color: #ff4d4d; }
+        .login-link { text-align: center; margin-top: 16px; font-size: 0.9rem; }
+        .login-link a { color: var(--accentC); text-decoration: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="register-card">
+            <div class="glow-effect"></div>
+            <h1>Buat Akun Profil XI-4</h1>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Aktif</label>
+                    <input type="email" id="email" required>
+                </div>
+                <div class="form-group password-wrapper">
+                    <label for="password">Buat Password (min. 6 karakter)</label>
+                    <input type="password" id="password" minlength="6" required>
+                    <i class="ri-eye-line password-toggle" id="password-toggle"></i>
+                </div>
+                <div class="form-group">
+                    <label for="secret-code">Kode Rahasia Kelas</label>
+                    <input type="text" id="secret-code" required>
+                </div>
+                <button type="submit" id="submit-btn">Daftar Akun</button>
+                <p id="message"></p>
+            </form>
+            <div class="login-link">
+                <p>Sudah punya akun? <a href="admin.html">Login di sini</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
+
+        // --- PENTING: GANTI KODE RAHASIA DI SINI ---
+        const KODE_RAHASIA_KELAS = 'XI4WEBSITE';
+        // -----------------------------------------
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDxOGzerbdJXnUO93i7wjIWUYpeICu9kyw",
+            authDomain: "elevenfourgengs.firebaseapp.com",
+            projectId: "elevenfourgengs",
+            storageBucket: "elevenfourgengs.firebasestorage.app",
+            messagingSenderId: "322756405034",
+            appId: "1:322756405034:web:a42662d8dcd420a91d2053",
+            measurementId: "G-E6YJZP6BPX"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const registerForm = document.getElementById('register-form');
+        const messageEl = document.getElementById('message');
+        const submitBtn = document.getElementById('submit-btn');
+        const passwordInput = document.getElementById('password');
+        const passwordToggle = document.getElementById('password-toggle');
+
+        // Fungsi untuk menampilkan/menyembunyikan password
+        passwordToggle.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            passwordToggle.classList.toggle('ri-eye-line');
+            passwordToggle.classList.toggle('ri-eye-off-line');
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nama = registerForm.nama.value;
+            const email = registerForm.email.value;
+            const password = registerForm.password.value;
+            const secretCode = registerForm['secret-code'].value;
+
+            submitBtn.disabled = true;
+            messageEl.textContent = 'Mendaftarkan...';
+            messageEl.className = '';
+
+            // 1. Validasi Kode Rahasia
+            if (secretCode !== KODE_RAHASIA_KELAS) {
+                messageEl.textContent = 'Kode Rahasia Kelas salah!';
+                messageEl.className = 'error';
+                submitBtn.disabled = false;
+                return;
+            }
+
+            try {
+                // 2. Buat user di Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // 3. Buat dokumen user di koleksi 'users'
+                await setDoc(doc(db, 'users', user.uid), {
+                    nama: nama,
+                    email: user.email
+                });
+
+                // 4. Buat dokumen profil publik di koleksi 'profiles'
+                await setDoc(doc(db, 'profiles', user.uid), {
+                    nama: nama,
+                    motto: 'Siswa XI-4 yang keren!',
+                    instagram: '',
+                    fotoURL: 'default-avatar.png', // Nama file default
+                    userId: user.uid
+                });
+
+                messageEl.textContent = 'Pendaftaran berhasil! Silakan login.';
+                messageEl.className = 'success';
+                registerForm.reset();
+
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    messageEl.textContent = 'Email ini sudah terdaftar!';
+                } else {
+                    messageEl.textContent = 'Terjadi error. Coba lagi.';
+                }
+                messageEl.className = 'error';
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
+
