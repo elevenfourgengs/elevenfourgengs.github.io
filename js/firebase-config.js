@@ -1,24 +1,26 @@
-    // firebase-config.js
-    // Konfigurasi Firebase Anda dari Firebase Console
-    var firebaseConfig = {
-      apiKey: "AIzaSyDxOGzerbdJXnUO93i7wjIWUYpeICu9kyw",
-      authDomain: "elevenfourgengs.firebaseapp.com",
-      projectId: "elevenfourgengs",
-      storageBucket: "elevenfourgengs.firebasestorage.app",
-      messagingSenderId: "322756405034",
-      appId: "1:322756405034:web:a42662d8dcd420a91d2053",
-      // measurementId ini tidak kita gunakan untuk auth/db/storage, tapi tidak masalah ada di sini
-      measurementId: "G-E6YJZP6BPX"
-    };
+// js/firebase-config.js
+// Import fungsi-fungsi yang dibutuhkan dari Firebase SDK v9
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+import { getStorage } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-storage.js";
 
-    // Inisialisasi Firebase App
-    firebase.initializeApp(firebaseConfig);
+// Konfigurasi Firebase Anda dari Firebase Console
+const firebaseConfig = {
+  apiKey: "AIzaSyDxOGzerbdJXnUO93i7wjIWUYpeICu9kyw",
+  authDomain: "elevenfourgengs.firebaseapp.com",
+  projectId: "elevenfourgengs",
+  storageBucket: "elevenfourgengs.firebasestorage.app",
+  messagingSenderId: "322756405034",
+  appId: "1:322756405034:web:a42662d8dcd420a91d2053",
+  measurementId: "G-E6YJZP6BPX"
+};
 
-    // Mendapatkan referensi ke layanan Firebase yang kita butuhkan
-    // Firebase Authentication untuk login
-    const auth = firebase.auth();
-    // Firestore Database untuk menyimpan data profil siswa
-    const db = firebase.firestore();
-    // Firebase Storage untuk mengelola foto profil
-    const storage = firebase.storage();
-    
+// Inisialisasi Firebase App
+const app = initializeApp(firebaseConfig);
+
+// Mendapatkan referensi ke layanan Firebase yang kita butuhkan
+// Dan mengekspornya agar bisa diimpor di file lain
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const storage = getStorage(app);
