@@ -1,169 +1,182 @@
 // js/profile.js
-// Mendapatkan referensi elemen-elemen dari HTML
+// Import layanan Firebase dari file konfigurasi kita
+import { auth, db, storage } from './firebase-config.js';
+// Import fungsi-fungsi yang dibutuhkan dari Firebase SDK v9
+import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js";
+import { doc, getDoc, setDoc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+import { ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-storage.js";
+
+// Mendapatkan referensi elemen-elemen dari HTML (ID disesuaikan)
+const profileContainer = document.getElementById('profile-container');
+const loadingMessage = document.getElementById('loading-message');
+const profilePicPreview = document.getElementById('profile-pic-preview');
+const fileInput = document.getElementById('file-input');
+const uploadProgress = document.getElementById('upload-progress');
 const profileForm = document.getElementById('profile-form');
-const fullNameInput = document.getElementById('full-name');
-const nicknameInput = document.getElementById('nickname');
-const instagramInput = document.getElementById('instagram');
-const whatsappInput = document.getElementById('whatsapp');
-const profilePictureInput = document.getElementById('profile-picture-input');
-const profileImgPreview = document.getElementById('profile-img-preview');
-const initialsPlaceholder = document.getElementById('initials-placeholder');
-const alertMessage = document.getElementById('alert-message');
-const logoutButton = document.getElementById('logout-button');
+const fullNameInput = document.getElementById('full-name'); // ID disesuaikan
+const nicknameInput = document.getElementById('nickname');   // ID disesuaikan
+const instagramInput = document.getElementById('instagram'); // ID disesuaikan
+const whatsappInput = document.getElementById('whatsapp');   // ID baru
+const mottoInput = document.getElementById('motto');         // ID baru
+const saveBtn = document.getElementById('save-btn');
+const messageEl = document.getElementById('message'); // Untuk pesan sukses/error
+const logoutButton = document.getElementById('logout-button'); // ID disesuaikan
 
 let currentUser = null; // Variabel untuk menyimpan data pengguna yang sedang login
+let currentProfileRef = null; // Referensi dokumen Firestore untuk profil pengguna
 
 // --- FUNGSI UTILITY ---
 
-// Fungsi untuk menampilkan pesan alert
-function showAlert(message, type) {
-    alertMessage.textContent = message;
-    alertMessage.className = `alert alert-${type} mt-3`;
-    alertMessage.classList.remove('d-none');
+// Fungsi untuk menampilkan pesan (mirip showAlert tapi menggunakan messageEl)
+function showStatusMessage(message, type) {
+    messageEl.textContent = message;
+    messageEl.className = type; // 'success' atau 'error'
     setTimeout(() => {
-        alertMessage.classList.add('d-none');
+        messageEl.textContent = '';
+        messageEl.className = '';
     }, 5000);
-}
-
-// Fungsi untuk membuat inisial dari nama
-function getInitials(name) {
-    if (!name) return '?';
-    const parts = name.split(' ').filter(word => word.length > 0);
-    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
-    if (parts.length > 1) return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
-    return '?';
 }
 
 // --- AUTENTIKASI DAN MEMUAT DATA ---
 
-// Mengecek status autentikasi pengguna
-auth.onAuthStateChanged(user => {
+// Mengecek status autentikasi pengguna secara real-time
+onAuthStateChanged(auth, async (user) => {
     if (user) {
         currentUser = user;
-        // console.log("User is logged in:", user.uid); // Debugging
-        loadProfileData(user.uid);
+        currentProfileRef = doc(db, 'profiles', user.uid); // Membuat referensi dokumen Firestore
+        
+        loadingMessage.style.display = 'none'; // Sembunyikan pesan loading
+        profileContainer.style.display = 'block'; // Tampilkan form profil
+
+        await loadProfileData(); // Panggil fungsi untuk memuat data profil
     } else {
         // Jika tidak login, arahkan kembali ke halaman login
-        // console.log("User is logged out, redirecting to login."); // Debugging
         window.location.href = 'login.html';
     }
 });
 
 // Memuat data profil dari Firestore
-async function loadProfileData(uid) {
+async function loadProfileData() {
     try {
-        const docRef = db.collection('profiles').doc(uid);
-        const doc = await docRef.get();
+        const docSnap = await getDoc(currentProfileRef); // Mengambil dokumen profil
 
-        if (doc.exists) {
-            const data = doc.data();
-            fullNameInput.value = data.name || '';
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            fullNameInput.value = data.fullName || currentUser.displayName || ''; // Gunakan displayName dari Auth jika belum ada di Firestore
             nicknameInput.value = data.nickname || '';
             instagramInput.value = data.instagram || '';
-            whatsappInput.value = data.whatsapp || '';
+            whatsappInput.value = data.whatsapp || ''; // Memuat data WhatsApp
+            mottoInput.value = data.motto || ''; // Memuat data Motto
 
-            if (data.photoUrl) {
-                profileImgPreview.innerHTML = `<img src="${data.photoUrl}" class="profile-img" alt="Foto Profil">`;
+            if (data.photoURL) { // Perhatikan 'photoURL'
+                profilePicPreview.src = data.photoURL;
             } else {
-                initialsPlaceholder.textContent = getInitials(data.name || '');
-                profileImgPreview.innerHTML = initialsPlaceholder.outerHTML; // Tampilkan inisial jika tidak ada foto
+                profilePicPreview.src = "https://via.placeholder.com/120?text=XI-4"; // Placeholder default
             }
-            // console.log("Profile data loaded:", data); // Debugging
         } else {
-            // Jika dokumen profil belum ada, buat dokumen baru dengan UID pengguna
-            // console.log("No profile document found, creating new one."); // Debugging
-            await db.collection('profiles').doc(uid).set({
-                name: currentUser.displayName || '',
+            // Jika dokumen profil belum ada, buat dokumen baru dengan data awal
+            await setDoc(currentProfileRef, {
+                fullName: currentUser.displayName || '',
                 email: currentUser.email,
-                photoUrl: '',
+                photoURL: "https://via.placeholder.com/120?text=XI-4", // URL default placeholder
                 nickname: '',
                 instagram: '',
-                whatsapp: ''
+                whatsapp: '',
+                motto: ''
             });
-            initialsPlaceholder.textContent = getInitials(currentUser.displayName || '');
-            profileImgPreview.innerHTML = initialsPlaceholder.outerHTML;
-            showAlert('Profil baru dibuat. Silakan lengkapi data Anda.', 'info');
+            fullNameInput.value = currentUser.displayName || '';
+            showStatusMessage('Profil baru dibuat. Silakan lengkapi data Anda.', 'success');
         }
     } catch (error) {
-        // console.error("Error loading profile data:", error.message); // Debugging
-        showAlert('Gagal memuat data profil: ' + error.message, 'danger');
+        console.error("Error loading profile data:", error);
+        showStatusMessage('Gagal memuat data profil: ' + error.message, 'error');
     }
 }
 
 // --- LOGIKA UPLOAD FOTO ---
 
-profilePictureInput.addEventListener('change', async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+profilePicPreview.addEventListener('click', () => fileInput.click()); // Klik gambar memicu input file
 
-    if (!currentUser) {
-        showAlert('Anda harus login untuk mengunggah foto.', 'danger');
+fileInput.addEventListener('change', (e) => handleFileUpload(e.target.files[0]));
+
+async function handleFileUpload(file) {
+    if (!file || !currentUser) {
+        showStatusMessage('Pilih file atau Anda belum login.', 'error');
         return;
     }
 
-    const storageRef = storage.ref(`profile_pictures/${currentUser.uid}/${file.name}`);
-    const uploadTask = storageRef.put(file);
+    try {
+        const storageReference = ref(storage, `profile_pictures/${currentUser.uid}/${file.name}`);
+        const uploadTask = uploadBytesResumable(storageReference, file);
 
-    uploadTask.on('state_changed',
-        (snapshot) => {
-            // Handle progress, if needed
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            showAlert(`Mengunggah: ${progress.toFixed(0)}%`, 'info');
-        },
-        (error) => {
-            // Handle unsuccessful uploads
-            // console.error("Upload error:", error.message); // Debugging
-            showAlert('Gagal mengunggah foto: ' + error.message, 'danger');
-        },
-        async () => {
-            // Handle successful uploads on complete
-            const downloadURL = await uploadTask.snapshot.ref.getDownloadURL();
-            // Simpan URL foto ke Firestore
-            await db.collection('profiles').doc(currentUser.uid).update({
-                photoUrl: downloadURL
-            });
-            profileImgPreview.innerHTML = `<img src="${downloadURL}" class="profile-img" alt="Foto Profil">`;
-            showAlert('Foto profil berhasil diunggah!', 'success');
-            // console.log("Photo uploaded and URL saved:", downloadURL); // Debugging
-        }
-    );
-});
+        uploadProgress.style.display = 'block'; // Tampilkan progress bar
+        saveBtn.disabled = true; // Nonaktifkan tombol simpan saat upload
+
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                uploadProgress.value = progress;
+            },
+            (error) => {
+                console.error("Upload failed:", error);
+                showStatusMessage('Gagal mengunggah foto!', 'error');
+                uploadProgress.style.display = 'none';
+                saveBtn.disabled = false;
+            },
+            async () => {
+                const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                profilePicPreview.src = downloadURL; // Update gambar di preview
+                await updateDoc(currentProfileRef, { photoURL: downloadURL }); // Simpan URL ke Firestore
+                showStatusMessage('Foto profil berhasil diunggah!', 'success');
+                uploadProgress.style.display = 'none';
+                saveBtn.disabled = false;
+            }
+        );
+    } catch (error) {
+        console.error("Error handling file upload:", error);
+        showStatusMessage('Terjadi kesalahan saat upload: ' + error.message, 'error');
+        saveBtn.disabled = false;
+    }
+}
 
 // --- LOGIKA SIMPAN PERUBAHAN PROFIL ---
 
 profileForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-
     if (!currentUser) {
-        showAlert('Anda harus login untuk menyimpan perubahan.', 'danger');
+        showStatusMessage('Anda harus login untuk menyimpan perubahan.', 'error');
         return;
     }
 
+    saveBtn.disabled = true;
+    showStatusMessage('Menyimpan...', 'info'); // Gunakan 'info' untuk status sementara
+
     try {
-        await db.collection('profiles').doc(currentUser.uid).update({
-            name: fullNameInput.value,
+        await updateDoc(currentProfileRef, {
+            fullName: fullNameInput.value,
             nickname: nicknameInput.value,
             instagram: instagramInput.value,
-            whatsapp: whatsappInput.value
+            whatsapp: whatsappInput.value, // Simpan data WhatsApp
+            motto: mottoInput.value        // Simpan data Motto
         });
-        showAlert('Profil berhasil diperbarui!', 'success');
-        // console.log("Profile updated successfully!"); // Debugging
-        initialsPlaceholder.textContent = getInitials(fullNameInput.value || '');
+        showStatusMessage('Profil berhasil diperbarui!', 'success');
     } catch (error) {
-        // console.error("Error updating profile:", error.message); // Debugging
-        showAlert('Gagal memperbarui profil: ' + error.message, 'danger');
+        console.error("Error updating profile:", error);
+        showStatusMessage('Gagal memperbarui profil: ' + error.message, 'error');
     }
+    saveBtn.disabled = false;
 });
 
 // --- LOGIKA LOGOUT ---
 
 logoutButton.addEventListener('click', async () => {
     try {
-        await auth.signOut();
-        // console.log("User logged out."); // Debugging
-        window.location.href = 'login.html'; // Arahkan kembali ke halaman login
+        await signOut(auth);
+        window.location.href = 'index.html'; // Arahkan ke halaman utama setelah logout
     } catch (error) {
-        // console.error("Logout error:", error.message); // Debugging
-        showAlert('Gagal logout: ' + error.message, 'danger');
+        console.error("Logout error:", error);
+        showStatusMessage('Gagal logout: ' + error.message, 'error');
     }
 });
+
+fix: Perbaiki js/profile.js dengan kode JavaScript yang benar
