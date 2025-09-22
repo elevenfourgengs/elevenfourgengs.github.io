@@ -2,14 +2,31 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <title>XI-4 • elevenfourgengs — Official Website (Dark Gen Z, Optimized)</title>
+  <title>XI-4 • elevenfourgengs — Official Website (Dark Gen Z)</title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <meta name="description" content="Website resmi Kelas 11-4 SMAN 1 Dolok Masihul — galeri, jadwal, roster, pengumuman, piket, siswa, agenda, hall of fame, aspirasi.">
+  <meta name="theme-color" content="#07070b">
+
+  <!-- Open Graph / Twitter Cards -->
+  <meta property="og:title" content="XI-4 • elevenfourgengs — Kelas 11-4 SMAN 1 Dolok Masihul">
+  <meta property="og:description" content="Pusat informasi & dokumentasi XI-4: jadwal, piket, galeri, agenda, hall of fame, dan aspirasi.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Preconnect & fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@600;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/remixicon@3.7.0/fonts/remixicon.css" rel="stylesheet">
+
+  <!-- Preload hero image (replace with optimized WebP when available) -->
+  <link rel="preload" as="image" href="assets/1755172317026.jpg">
+
   <style>
 /* ===========================
-   XI-4 • Dark GenZ Styles (Optimized)
+   XI-4 • Dark GenZ Styles (Full inline)
    =========================== */
 
 /* tokens */
@@ -62,6 +79,10 @@ body.no-scroll {
 /* container */
 .container{max-width:1240px;margin:0 auto;padding:0 22px}
 @media (max-width:700px){.container{padding:0 6vw}}
+
+/* Skip link */
+.skip-link{position:absolute;left:-999px;top:auto}
+.skip-link:focus{left:12px;top:12px;background:#fff;color:#000;padding:8px 12px;border-radius:6px;z-index:9999}
 
 /* NAVBAR */
 .header{position:sticky;top:12px;z-index:999;display:flex;justify-content:center;padding:8px 18px;background:transparent}
@@ -157,7 +178,7 @@ tr.today{background:linear-gradient(90deg,var(--accentC) 0%,var(--accentA) 100%)
 .hof-img{width:68px;height:68px;border-radius:50%;object-fit:cover;box-shadow:0 6px 18px rgba(0,0,0,0.6)}
 .hof-coming-soon{width:68px;height:68px;border-radius:50%;background:linear-gradient(135deg,#222,#111);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:1.05em;border:2px dashed rgba(255,255,255,0.04)}
 
-/* SISWA (2 columns on mobile) */
+/* SISWA (responsive) */
 .siswa-controls { display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:12px }
 .siswa-search { width:100%;max-width:420px;margin:0 auto;border:1px solid rgba(255,255,255,0.04);padding:10px 12px;border-radius:10px;font-size:1rem;background:transparent;color:var(--muted);outline:none;transition:border .12s}
 .siswa-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:12px; margin-top:12px; }
@@ -168,7 +189,7 @@ tr.today{background:linear-gradient(90deg,var(--accentC) 0%,var(--accentA) 100%)
 .siswa-name { font-weight:900; font-size:1rem; text-align:center; word-break: break-word; }
 .siswa-role { font-size:.84rem; color:var(--accentC); margin-top:6px; text-align:center }
 
-/* responsive grid: 2 columns on mobile */
+/* responsive grid: 2-3 columns on mobile */
 @media (max-width:900px) { .siswa-grid { grid-template-columns: repeat(3, 1fr) } }
 @media (max-width:600px) { .siswa-grid { grid-template-columns: repeat(2, 1fr) } .hero-content h1 { font-size:1.5rem } section { padding:16px 12px } }
 @media (max-width:420px) { .siswa-grid { grid-template-columns: 1fr 1fr } }
@@ -190,13 +211,12 @@ tr.today{background:linear-gradient(90deg,var(--accentC) 0%,var(--accentA) 100%)
 .text-muted { color:var(--muted-weak) }
 a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,255,0.12); outline-offset:3px; border-radius:8px }
 
-
-/* --- CSS BARU UNTUK MENU MOBILE PROFESIONAL --- */
+/* --- MOBILE NAV (professional) --- */
 @media(max-width: 900px) {
     .navlinks {
       position: fixed;
       top: 0;
-      right: -100%; /* Sembunyi di luar layar kanan */
+      right: -100%; /* hidden by default */
       width: 280px;
       height: 100vh;
       padding: 24px;
@@ -207,11 +227,11 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
       flex-direction: column;
       align-items: flex-start;
       gap: 12px;
-      border-left: 1px solid var(--glass-border);
+      border-left: 1px solid rgba(255,255,255,0.03);
     }
 
     .navlinks.open {
-      right: 0; /* Muncul ke dalam layar */
+      right: 0; /* slide in */
     }
 
     .nav-close {
@@ -245,12 +265,9 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
     }
 }
 
+/* Desktop: revert mobile elements */
 @media(min-width: 901px) {
-    /* Sembunyikan elemen mobile di desktop */
-    .nav-close, .nav-overlay {
-        display: none;
-    }
-    /* Kembalikan style navlinks di desktop */
+    .nav-close, .nav-overlay { display: none; }
     .navlinks {
         position: static;
         height: auto;
@@ -260,11 +277,11 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
         border: none;
         padding: 0;
         right: 0;
-        display: flex; /* Pastikan tetap terlihat di desktop */
+        display: flex;
     }
 }
 
-/* --- CSS BARU UNTUK MADING DIGITAL --- */
+/* --- MADING DIGITAL --- */
 #mading-digital { padding: 32px 22px; }
 .mading-grid {
   display: grid;
@@ -286,12 +303,19 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
 .mading-card .content {
   font-size: 1rem;
   line-height: 1.6;
-  white-space: pre-wrap; /* Agar spasi dan enter tetap terlihat */
+  white-space: pre-wrap;
 }
-/* end style */
+
+/* prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation-duration: 0s !important; animation-delay: 0s !important; }
+}
   </style>
 </head>
 <body>
+
+<!-- Skip link for keyboard users -->
+<a class="skip-link" href="#main">Lewati ke konten utama</a>
 
 <header class="header" role="banner">
   <div class="navbar container" role="navigation" aria-label="Main">
@@ -305,16 +329,16 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
       </div>
     </div>
 
-    <button class="menu-toggle" id="menuBtn" aria-controls="navlinks" aria-expanded="false">
-      <i class="ri-menu-line"></i>
+    <button class="menu-toggle" id="menuBtn" aria-controls="navlinks" aria-expanded="false" aria-label="Buka menu">
+      <i class="ri-menu-line" aria-hidden="true"></i>
     </button>
   </div>
 
   <nav class="navlinks" id="navlinks" aria-label="Site">
     <button class="nav-close" id="navCloseBtn" aria-label="Tutup menu">
-        <i class="ri-close-line"></i>
+        <i class="ri-close-line" aria-hidden="true"></i>
     </button>
-    <a href="#top" class="active">Home</a>
+    <a href="#top" class="active" aria-current="page">Home</a>
     <a href="#about">Tentang</a>
     <a href="#roster">Roster</a>
     <a href="#piket">Piket</a>
@@ -325,719 +349,870 @@ a:focus,button:focus,input:focus,textarea:focus { outline:3px solid rgba(0,212,2
     <a href="#feedback">Aspirasi</a>
   </nav>
 
-  <div class="nav-overlay" id="navOverlay"></div>
+  <div class="nav-overlay" id="navOverlay" tabindex="-1" aria-hidden="true"></div>
 </header>
 
-<section id="mading-digital" class="container">
-  <div class="section-title">
-    <h2>📢 Mading Digital XI-4</h2>
-    <div class="section-sub">Informasi terbaru dan pengumuman penting. Di-update secara real-time.</div>
-  </div>
-  <div id="mading-content" class="mading-grid">
-    <p class="text-muted">Memuat pengumuman terbaru...</p>
-  </div>
-</section>
+<main id="main" tabindex="-1">
 
-<section class="hero" id="top" aria-label="Hero area">
-  <div class="hero-bg" id="heroParallax" aria-hidden="true"></div>
-
-  <div class="hero-card container" role="region">
-    <div class="hero-content">
-      <h1>
-        <span>Selamat Datang di Website Resmi</span><br>
-        <span class="text-bold" style="font-size:1.05em;">Kelas 11-4 SMAN 1 Dolok Masihul</span>
-        <span class="type" id="type" aria-hidden="true"></span>
-      </h1>
-
-      <div class="hero-lead">
-        Pusat informasi & dokumentasi XI-4: jadwal, piket, galeri, agenda, hall of fame, dan aspirasi. Desain ringan untuk HP, interaktif, dan mudah dipakai.
-      </div>
-
-      <div class="cta-row">
-        <button class="btn" id="openGalleryBtn" style="background:linear-gradient(90deg,var(--accentA),var(--accentC));color:#061018;border:none;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:800;">📸 Lihat Galeri</button>
-        <a class="btn cta-ghost" href="assets/1755172317055.jpg" download style="font-weight:800;">📥 Download Jadwal Pelajaran</a>
-        <a class="btn cta-ghost" href="assets/1755172317062.jpg" download style="font-weight:800;">📥 Download Jadwal Piket</a>
-      </div>
-
-      <div class="hero-structure" aria-hidden="false" style="margin-top:14px;">
-        <b style="display:block;margin-bottom:8px;">Struktur Kelas:</b>
-        <span class="badge">Ketua: Jonnatan</span>
-        <span class="badge" style="background:linear-gradient(90deg,var(--accentC),var(--accentA));color:#061018">Wakil: Muhammad Rio</span>
-        <span class="badge" style="background:linear-gradient(90deg,var(--accentA),var(--accentB));color:#061018">Sekretaris: Dini</span>
-        <span class="badge" style="background:linear-gradient(90deg,var(--accentB),var(--accentC));color:#061018">Bendahara: Karina</span>
-      </div>
-    </div>
-
-    <div>
-      <div class="stat-panel" aria-hidden="false">
-        <div class="stat-card"><div class="kicker">Guru Wali</div><div class="num">Ibu Fauziah</div><div class="desc">Wali Kelas XI-4</div></div>
-        <div class="stat-card"><div class="kicker">Jumlah Foto</div><div class="num" id="photoCount">0</div><div class="desc">Galeri</div></div>
-        <div class="stat-card"><div class="kicker">Total Siswa</div><div class="num" id="stat-jml-siswa">35</div><div class="desc">Anggota</div></div>
-        <div class="stat-card"><div class="kicker">Agenda Aktif</div><div class="num" id="stat-agenda">0</div><div class="desc">Upcoming</div></div>
-      </div>
-
-      <div class="hero-photo-wrap">
-        <img class="hero-photo" src="assets/1755172317026.jpg" alt="Foto Bersama XI-4" loading="lazy">
-        <div class="photo-caption">Foto bersama XI-4, 2025 • <b>Kebersamaan adalah kekuatan kita!</b></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section aria-label="Widgets">
-  <div class="container">
-    <div class="widgets-row">
-      <div class="widget-card">
-        <div class="widget-title">💡 Quotes Motivasi</div>
-        <div class="widget-motivation" id="motivasi"></div>
-      </div>
-
-      <div class="widget-card">
-        <div class="widget-title">⏰ Jam Digital</div>
-        <div class="widget-time" id="jam" aria-live="polite"></div>
-      </div>
-
-      <div class="widget-card">
-        <div class="widget-title">⏳ Menuju UTS</div>
-        <div class="widget-countdown" id="countdown"></div>
-      </div>
-
-      <div class="widget-card widget-weather">
-        <div class="widget-title">🌤️ Cuaca Sekarang</div>
-        <div><span class="icon" id="cuaca-icon">🌤️</span> <span class="desc" id="cuaca-desc">Mengambil info cuaca...</span></div>
-      </div>
-
-      <div class="widget-card widget-vote">
-        <div class="widget-title">📊 Voting: Kegiatan Favorit</div>
-        <form id="voteForm">
-          <label><input type="radio" name="vote" value="Ekskul"> Ekskul</label>
-          <label><input type="radio" name="vote" value="Classmeeting"> Classmeeting</label>
-          <label><input type="radio" name="vote" value="Studi Tur"> Studi Tur</label>
-          <label><input type="radio" name="vote" value="Pensi"> Pensi</label>
-          <label><input type="radio" name="vote" value="Bakti Sosial"> Bakti Sosial</label>
-        </form>
-        <div id="voteResult" style="margin-top:8px;font-weight:800;color:var(--accentC)"></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="about">
-  <div class="container">
-    <div class="section-title"><h2>Tentang Kelas</h2>
-      <div class="section-sub">Pusat info, dokumentasi, dan pengumuman penting untuk seluruh anggota XI-4. Website ini menjadi ruang virtual yang menghubungkan seluruh siswa, wali kelas, dan admin.</div>
-    </div>
-
-    <div class="grid">
-      <div class="card"><h3>Visi</h3><p>Mewujudkan lingkungan belajar yang solid, kreatif, dan saling mendukung baik akademik maupun non-akademik.</p></div>
-      <div class="card"><h3>Misi</h3><p>• Menjadi media informasi utama kelas<br>• Mendokumentasikan kegiatan & prestasi<br>• Meningkatkan kekompakan kelas melalui kolaborasi & karya</p></div>
-      <div class="card"><h3>Nilai Kelas</h3><p class="text-muted">Solidaritas • Tanggung Jawab • Kreativitas • Kedisiplinan • Respect</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="roster" aria-label="Roster Pelajaran">
-  <div class="container">
-    <div class="section-title"><h2>Roster Pelajaran</h2>
-      <div class="section-sub">Jadwal pelajaran mingguan. Download gambar jadwal untuk wallpaper HP agar tidak lupa!</div>
-    </div>
-
-    <div class="table-wrap" role="table">
-      <table aria-label="Roster Pelajaran" style="width:100%;border-collapse:collapse">
-        <thead>
-            <tr>
-                <th>Hari</th>
-                <th>Mata Pelajaran</th>
-            </tr>
-        </thead>
-        <tbody id="roster-body">
-            </tbody>
-      </table>
-    </div>
-
-    <div class="hcenter" style="margin-top:12px">
-      <a class="btn cta-ghost" href="assets/1755172317055.jpg" download>📥 Download Gambar Jadwal</a>
-    </div>
-  </div>
-</section>
-
-<section id="piket" aria-label="Jadwal Piket">
-  <div class="container">
-    <div class="section-title"><h2>Jadwal Piket</h2>
-      <div class="section-sub">Kelompok piket bergilir untuk menjaga kebersihan kelas. Baris highlight menandakan hari ini.</div>
-    </div>
-    <div class="table-wrap">
-      <table aria-label="Jadwal Piket" style="width:100%;border-collapse:collapse">
-        <thead><tr><th>Hari</th><th>Nama Siswa</th></tr></thead>
-        <tbody id="piket-body"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<section id="gallery" aria-label="Galeri Kelas">
-  <div class="container">
-    <div class="section-title"><h2>Galeri</h2>
-      <div class="section-sub">Momen seru, prestasi, ekskul, dokumentasi kebersamaan. Klik untuk memperbesar.</div>
-      <div style="margin:12px 0 0 0;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="badge" onclick="filterGaleri('all')">Semua</button>
-        <button class="badge" onclick="filterGaleri('Kebersamaan')">Kebersamaan</button>
-        <button class="badge" onclick="filterGaleri('Ekskul')">Ekskul</button>
-        <button class="badge" onclick="filterGaleri('Project')">Project</button>
-      </div>
-    </div>
-
-    <div class="gallery" id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px">
-      </div>
-  </div>
-</section>
-
-<section id="siswa" aria-label="Daftar Siswa">
-  <div class="container">
+  <section id="mading-digital" class="container">
     <div class="section-title">
-        <h2>Daftar Siswa</h2>
+      <h2>📢 Mading Digital XI-4</h2>
+      <div class="section-sub">Informasi terbaru dan pengumuman penting. Di-update secara real-time.</div>
     </div>
+    <div id="mading-content" class="mading-grid">
+      <p class="text-muted">Memuat pengumuman terbaru...</p>
+    </div>
+  </section>
 
-    <div class="siswa-controls">
-      <input id="siswa-search" class="siswa-search" type="text" placeholder="🔍 Cari nama siswa..." aria-label="Cari nama siswa">
-      <select id="siswa-sort" aria-label="Urutkan siswa">
-        <option value="az">Urutkan: A - Z</option>
-        <option value="za">Urutkan: Z - A</option>
-      </select>
-    </div>
-    
-    <div class="hcenter" style="margin: 24px 0 12px 0;">
-      <button id="lihatDenahBtn" class="btn cta-ghost">📍 Lihat Denah Tempat Duduk</button>
-    </div>
+  <section class="hero" id="top" aria-label="Hero area">
+    <div class="hero-bg" id="heroParallax" aria-hidden="true"></div>
 
-    <div class="siswa-grid" id="siswa-grid" role="list">
-      <p class="text-muted hcenter">Memuat daftar siswa...</p>
-    </div>
-  </div>
-</section>
+    <div class="hero-card container" role="region" aria-labelledby="heroTitle">
+      <div class="hero-content">
+        <h1 id="heroTitle">
+          <span>Selamat Datang di Website Resmi</span><br>
+          <span class="text-bold" style="font-size:1.05em;">Kelas 11-4 SMAN 1 Dolok Masihul</span>
+          <span class="type" id="type" aria-hidden="true"></span>
+        </h1>
 
-<section id="agenda">
-  <div class="container">
-    <div class="section-title"><h2>Agenda Kegiatan</h2>
-      <div class="section-sub">Daftar event, lomba, dan tanggal penting. Semua info terbaru di bawah ini!</div>
-    </div>
-    <div id="agenda-list" class="grid"></div>
-  </div>
-</section>
+        <div class="hero-lead">
+          Pusat informasi & dokumentasi XI-4: jadwal, piket, galeri, agenda, hall of fame, dan aspirasi. Desain ringan untuk HP, interaktif, dan mudah dipakai.
+        </div>
 
-<section id="hall-of-fame">
-  <div class="container">
-    <div class="section-title"><h2>Hall of Fame</h2>
-      <div class="section-sub">Prestasi kelas XI-4, penghargaan, dan karya terbaik.</div>
-    </div>
+        <div class="cta-row">
+          <button class="btn" id="openGalleryBtn" style="background:linear-gradient(90deg,var(--accentA),var(--accentC));color:#061018;border:none;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:800;">📸 Lihat Galeri</button>
+          <a class="btn cta-ghost" href="assets/1755172317055.jpg" download style="font-weight:800;">📥 Download Jadwal Pelajaran</a>
+          <a class="btn cta-ghost" href="assets/1755172317062.jpg" download style="font-weight:800;">📥 Download Jadwal Piket</a>
+        </div>
 
-    <div class="hof-grid">
-      <div class="hof-card card">
-        <div class="hof-trophy" style="font-size:2rem;color:var(--accentA)">🏅</div>
-        <div class="hof-coming-soon">Coming<br>Soon</div>
-        <div class="hof-title" style="font-weight:800;margin-top:8px">Juara 1 Futsal</div>
-        <div class="hof-desc text-muted" style="text-align:center;margin-top:6px">Prestasi terbaru XI-4.</div>
+        <div class="hero-structure" aria-hidden="false" style="margin-top:14px;">
+          <b style="display:block;margin-bottom:8px;">Struktur Kelas:</b>
+          <span class="badge">Ketua: Jonnatan</span>
+          <span class="badge" style="background:linear-gradient(90deg,var(--accentC),var(--accentA));color:#061018">Wakil: Muhammad Rio</span>
+          <span class="badge" style="background:linear-gradient(90deg,var(--accentA),var(--accentB));color:#061018">Sekretaris: Dini</span>
+          <span class="badge" style="background:linear-gradient(90deg,var(--accentB),var(--accentC));color:#061018">Bendahara: Karina</span>
+        </div>
       </div>
-      <div class="hof-card card">
-        <div class="hof-trophy" style="font-size:2rem;color:var(--accentA)">🏅</div>
-        <div class="hof-coming-soon">Coming<br>Soon</div>
-        <div class="hof-title" style="font-weight:800;margin-top:8px">Karya Ilmiah Remaja</div>
-        <div class="hof-desc text-muted" style="text-align:center;margin-top:6px">Tingkat Kabupaten</div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section id="feedback">
-  <div class="container">
-    <div class="section-title"><h2>Aspirasi & Saran</h2>
-      <div class="section-sub">Kirim masukan, kritik, atau ide untuk website dan kelas kita.</div>
-    </div>
-
-    <form class="feedback" action="https://formspree.io/f/xqalvelz" method="POST">
-      <input type="text" name="Nama_Pengirim" id="fb-nama" placeholder="Nama (boleh anonim)" autocomplete="off" required>
-      <textarea name="Isi_Aspirasi" id="fb-isi" placeholder="Tulis aspirasimu..." rows="3" required></textarea>
-      <button type="submit">Kirim Aspirasi</button>
-    </form>
-
-    <div class="qr" aria-hidden="false" style="margin-top:16px">
       <div>
-        <div style="font-weight:700;margin-bottom:6px;">Bagikan Website Ini</div>
-        <div id="qrCode"></div>
+        <div class="stat-panel" aria-hidden="false">
+          <div class="stat-card"><div class="kicker">Guru Wali</div><div class="num">Ibu Fauziah</div><div class="desc">Wali Kelas XI-4</div></div>
+          <div class="stat-card"><div class="kicker">Jumlah Foto</div><div class="num" id="photoCount">0</div><div class="desc">Galeri</div></div>
+          <div class="stat-card"><div class="kicker">Total Siswa</div><div class="num" id="stat-jml-siswa">35</div><div class="desc">Anggota</div></div>
+          <div class="stat-card"><div class="kicker">Agenda Aktif</div><div class="num" id="stat-agenda">0</div><div class="desc">Upcoming</div></div>
+        </div>
+
+        <div class="hero-photo-wrap" aria-hidden="false">
+          <!-- hero image (kept simple; upgrade to <picture> with webp/srcset when available) -->
+          <img id="heroImg" class="hero-photo" src="assets/1755172317026.jpg" alt="Foto Bersama XI-4" loading="lazy" width="800" height="600">
+          <div class="photo-caption">Foto bersama XI-4, 2025 • <b>Kebersamaan adalah kekuatan kita!</b></div>
+        </div>
       </div>
-      <div style="font-size:.92em;color:var(--muted-weak);max-width:240px;margin-left:14px;">Scan atau share QR untuk membagikan website ini ke teman sekelas atau orang tua!</div>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section aria-label="Widgets">
+    <div class="container">
+      <div class="widgets-row">
+        <div class="widget-card">
+          <div class="widget-title">💡 Quotes Motivasi</div>
+          <div class="widget-motivation" id="motivasi"></div>
+        </div>
+
+        <div class="widget-card">
+          <div class="widget-title">⏰ Jam Digital</div>
+          <div class="widget-time" id="jam" aria-live="polite"></div>
+        </div>
+
+        <div class="widget-card">
+          <div class="widget-title">⏳ Menuju UTS</div>
+          <div class="widget-countdown" id="countdown"></div>
+        </div>
+
+        <div class="widget-card widget-weather">
+          <div class="widget-title">🌤️ Cuaca Sekarang</div>
+          <div><span class="icon" id="cuaca-icon">🌤️</span> <span class="desc" id="cuaca-desc">Mengambil info cuaca...</span></div>
+        </div>
+
+        <div class="widget-card widget-vote">
+          <div class="widget-title">📊 Voting: Kegiatan Favorit</div>
+          <form id="voteForm" aria-label="Voting kegiatan favorit">
+            <label><input type="radio" name="vote" value="Ekskul"> Ekskul</label><br>
+            <label><input type="radio" name="vote" value="Classmeeting"> Classmeeting</label><br>
+            <label><input type="radio" name="vote" value="Studi Tur"> Studi Tur</label><br>
+            <label><input type="radio" name="vote" value="Pensi"> Pensi</label><br>
+            <label><input type="radio" name="vote" value="Bakti Sosial"> Bakti Sosial</label><br>
+            <button type="submit" style="margin-top:8px;padding:8px 10px;border-radius:8px;border:none;background:linear-gradient(90deg,var(--accentB),var(--accentA));color:#061018;font-weight:800;cursor:pointer">Vote</button>
+          </form>
+          <div id="voteResult" style="margin-top:8px;font-weight:800;color:var(--accentC)"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="container">
+      <div class="section-title"><h2>Tentang Kelas</h2>
+        <div class="section-sub">Pusat info, dokumentasi, dan pengumuman penting untuk seluruh anggota XI-4. Website ini menjadi ruang virtual yang menghubungkan seluruh siswa, wali kelas, dan admin.</div>
+      </div>
+
+      <div class="grid">
+        <div class="card"><h3>Visi</h3><p>Mewujudkan lingkungan belajar yang solid, kreatif, dan saling mendukung baik akademik maupun non-akademik.</p></div>
+        <div class="card"><h3>Misi</h3><p>• Menjadi media informasi utama kelas<br>• Mendokumentasikan kegiatan & prestasi<br>• Meningkatkan kekompakan kelas melalui kolaborasi & karya</p></div>
+        <div class="card"><h3>Nilai Kelas</h3><p class="text-muted">Solidaritas • Tanggung Jawab • Kreativitas • Kedisiplinan • Respect</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="roster" aria-label="Roster Pelajaran">
+    <div class="container">
+      <div class="section-title"><h2>Roster Pelajaran</h2>
+        <div class="section-sub">Jadwal pelajaran mingguan. Download gambar jadwal untuk wallpaper HP agar tidak lupa!</div>
+      </div>
+
+      <div class="table-wrap" role="table" aria-labelledby="rosterHeading">
+        <table aria-label="Roster Pelajaran" style="width:100%;border-collapse:collapse">
+          <thead>
+              <tr>
+                  <th>Hari</th>
+                  <th>Mata Pelajaran</th>
+              </tr>
+          </thead>
+          <tbody id="roster-body"></tbody>
+        </table>
+      </div>
+
+      <div class="hcenter" style="margin-top:12px">
+        <a class="btn cta-ghost" href="assets/1755172317055.jpg" download>📥 Download Gambar Jadwal</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="piket" aria-label="Jadwal Piket">
+    <div class="container">
+      <div class="section-title"><h2>Jadwal Piket</h2>
+        <div class="section-sub">Kelompok piket bergilir untuk menjaga kebersihan kelas. Baris highlight menandakan hari ini.</div>
+      </div>
+      <div class="table-wrap">
+        <table aria-label="Jadwal Piket" style="width:100%;border-collapse:collapse">
+          <thead><tr><th>Hari</th><th>Nama Siswa</th></tr></thead>
+          <tbody id="piket-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section id="gallery" aria-label="Galeri Kelas">
+    <div class="container">
+      <div class="section-title"><h2>Galeri</h2>
+        <div class="section-sub">Momen seru, prestasi, ekskul, dokumentasi kebersamaan. Klik untuk memperbesar.</div>
+        <div style="margin:12px 0 0 0;display:flex;gap:10px;flex-wrap:wrap">
+          <button class="badge" onclick="filterGaleri('all')">Semua</button>
+          <button class="badge" onclick="filterGaleri('Kebersamaan')">Kebersamaan</button>
+          <button class="badge" onclick="filterGaleri('Ekskul')">Ekskul</button>
+          <button class="badge" onclick="filterGaleri('Project')">Project</button>
+        </div>
+      </div>
+
+      <div class="gallery" id="gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:12px">
+      </div>
+    </div>
+  </section>
+
+  <section id="siswa" aria-label="Daftar Siswa">
+    <div class="container">
+      <div class="section-title">
+          <h2>Daftar Siswa</h2>
+      </div>
+
+      <div class="siswa-controls">
+        <input id="siswa-search" class="siswa-search" type="text" placeholder="🔍 Cari nama siswa..." aria-label="Cari nama siswa">
+        <select id="siswa-sort" aria-label="Urutkan siswa">
+          <option value="az">Urutkan: A - Z</option>
+          <option value="za">Urutkan: Z - A</option>
+        </select>
+      </div>
+
+      <div class="hcenter" style="margin: 24px 0 12px 0;">
+        <button id="lihatDenahBtn" class="btn cta-ghost">📍 Lihat Denah Tempat Duduk</button>
+      </div>
+
+      <div class="siswa-grid" id="siswa-grid" role="list">
+        <p class="text-muted hcenter">Memuat daftar siswa...</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="agenda">
+    <div class="container">
+      <div class="section-title"><h2>Agenda Kegiatan</h2>
+        <div class="section-sub">Daftar event, lomba, dan tanggal penting. Semua info terbaru di bawah ini!</div>
+      </div>
+      <div id="agenda-list" class="grid"></div>
+    </div>
+  </section>
+
+  <section id="hall-of-fame">
+    <div class="container">
+      <div class="section-title"><h2>Hall of Fame</h2>
+        <div class="section-sub">Prestasi kelas XI-4, penghargaan, dan karya terbaik.</div>
+      </div>
+
+      <div class="hof-grid">
+        <div class="hof-card card">
+          <div class="hof-trophy" style="font-size:2rem;color:var(--accentA)">🏅</div>
+          <div class="hof-coming-soon">Coming<br>Soon</div>
+          <div class="hof-title" style="font-weight:800;margin-top:8px">Juara 1 Futsal</div>
+          <div class="hof-desc text-muted" style="text-align:center;margin-top:6px">Prestasi terbaru XI-4.</div>
+        </div>
+        <div class="hof-card card">
+          <div class="hof-trophy" style="font-size:2rem;color:var(--accentA)">🏅</div>
+          <div class="hof-coming-soon">Coming<br>Soon</div>
+          <div class="hof-title" style="font-weight:800;margin-top:8px">Karya Ilmiah Remaja</div>
+          <div class="hof-desc text-muted" style="text-align:center;margin-top:6px">Tingkat Kabupaten</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="feedback">
+    <div class="container">
+      <div class="section-title"><h2>Aspirasi & Saran</h2>
+        <div class="section-sub">Kirim masukan, kritik, atau ide untuk website dan kelas kita.</div>
+      </div>
+
+      <form id="feedbackForm" class="feedback" action="https://formspree.io/f/xqalvelz" method="POST">
+        <input type="text" name="Nama_Pengirim" id="fb-nama" placeholder="Nama (boleh anonim)" autocomplete="off" required>
+        <textarea name="Isi_Aspirasi" id="fb-isi" placeholder="Tulis aspirasimu..." rows="3" required></textarea>
+        <button type="submit">Kirim Aspirasi</button>
+      </form>
+
+      <div class="qr" aria-hidden="false" style="margin-top:16px">
+        <div>
+          <div style="font-weight:700;margin-bottom:6px;">Bagikan Website Ini</div>
+          <div id="qrCode" aria-hidden="false"></div>
+        </div>
+        <div style="font-size:.92em;color:var(--muted-weak);max-width:240px;margin-left:14px;">Scan atau share QR untuk membagikan website ini ke teman sekelas atau orang tua!</div>
+      </div>
+    </div>
+  </section>
+
+</main>
 
 <div class="modal" id="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview" tabindex="-1">
-  <img id="modalImg" src="#" alt="Preview">
+  <img id="modalImg" src="#" alt="Preview" tabindex="0">
 </div>
 
 <div class="fab-float" aria-hidden="false" style="position:fixed;right:18px;bottom:22px;z-index:999">
-  <button class="fab" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Ke Atas" style="width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accentA),var(--accentC));color:#061018;border:none">↑</button>
+  <button class="fab" id="toTopBtn" title="Ke Atas" aria-label="Ke Atas" style="width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accentA),var(--accentC));color:#061018;border:none">↑</button>
 </div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <footer style="position:relative;background:transparent;padding:26px 18px 42px 18px;text-align:center;color:var(--muted-weak);">
   <div style="margin-bottom:8px;">
-    <a href="https://instagram.com/elevenfourgengs" target="_blank" rel="noopener" style="color:var(--accentC);text-decoration:none;font-weight:600">Instagram @elevenfourgengs</a> • <a href="#contact" style="color:var(--muted-weak);text-decoration:none">Kontak</a>
+    <a href="https://instagram.com/elevenfourgengs" target="_blank" rel="noopener noreferrer" style="color:var(--accentC);text-decoration:none;font-weight:600">Instagram @elevenfourgengs</a> • <a href="#feedback" style="color:var(--muted-weak);text-decoration:none">Kontak</a>
   </div>
   <div style="font-size:.95rem;margin-bottom:14px;">© 2025 Kelas XI-4 SMAN 1 Dolok Masihul</div>
   <div style="font-size:.9rem;color:var(--muted-weak)"><strong>Dikembangkan oleh Alkahfi untuk seluruh elevenfourgengs</strong></div>
 </footer>
 
+<!-- QR lib (defer) -->
 <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js" defer></script>
 
 <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
-  import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
+/* ============================
+   Inline JS (focused on index.html)
+   - All behavior kept inside this file per request.
+   - Improvements: accessibility (skip, focus trap), safe mading rendering,
+     mobile nav, preload, ARIA updates, QR colors for dark theme,
+     modal focus restore, vote submit button, Formspree handling.
+   ============================ */
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDxOGzerbdJXnUO93i7wjIWUYpeICu9kyw",
-    authDomain: "elevenfourgengs.firebaseapp.com",
-    projectId: "elevenfourgengs",
-    storageBucket: "elevenfourgengs.firebasestorage.app",
-    messagingSenderId: "322756405034",
-    appId: "1:322756405034:web:a42662d8dcd420a91d2053",
-    measurementId: "G-E6YJZP6BPX"
-  };
+/* Firebase modular imports */
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js";
+import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js";
 
+/* ---------------------------
+   Firebase config & init
+   --------------------------- */
+/* NOTE: frontend Firebase config is normal; secure Firestore rules in console */
+const firebaseConfig = {
+  apiKey: "AIzaSyDxOGzerbdJXnUO93i7wjIWUYpeICu9kyw",
+  authDomain: "elevenfourgengs.firebaseapp.com",
+  projectId: "elevenfourgengs",
+  storageBucket: "elevenfourgengs.firebasestorage.app",
+  messagingSenderId: "322756405034",
+  appId: "1:322756405034:web:a42662d8dcd420a91d2053",
+  measurementId: "G-E6YJZP6BPX"
+};
+
+let db = null;
+try {
   const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  db = getFirestore(app);
+} catch (e) {
+  console.warn('Firebase init failed:', e);
+}
 
-  // Telinga untuk Pengumuman (sudah ada)
-  const qPengumuman = query(collection(db, "pengumuman"), orderBy("tanggal", "desc"));
-  onSnapshot(qPengumuman, (snapshot) => {
-    const data = snapshot.docs.map(doc => doc.data());
-    window.renderMading(data);
+/* ---------------------------
+   DOM helpers
+   --------------------------- */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+
+/* ---------------------------
+   Safe render for Mading (global)
+   - Avoids innerHTML with untrusted data to reduce XSS risk.
+   --------------------------- */
+window.renderMading = (pengumumanData) => {
+  const madingContent = $('#mading-content');
+  if (!madingContent) return;
+  madingContent.innerHTML = '';
+  if (!pengumumanData || pengumumanData.length === 0) {
+    const p = document.createElement('p');
+    p.className = 'text-muted';
+    p.textContent = 'Belum ada pengumuman terbaru.';
+    madingContent.appendChild(p);
+    return;
+  }
+  pengumumanData.forEach(p => {
+    const card = document.createElement('div');
+    card.className = 'mading-card';
+
+    const ts = document.createElement('div');
+    ts.className = 'timestamp';
+    let tanggal = 'Waktu tidak tersedia';
+    if (p.tanggal && p.tanggal.toDate) {
+      try {
+        tanggal = p.tanggal.toDate().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' }) + ' WIB';
+      } catch(e){}
+    }
+    ts.textContent = tanggal;
+    card.appendChild(ts);
+
+    const content = document.createElement('div');
+    content.className = 'content';
+    const isi = p.isi || '[Tidak ada konten]';
+    // preserve newlines safely
+    isi.split('\n').forEach((line, idx) => {
+      const d = document.createElement('div');
+      d.textContent = line;
+      content.appendChild(d);
+    });
+    card.appendChild(content);
+
+    madingContent.appendChild(card);
   });
+};
 
-  // Telinga BARU untuk Agenda
-  const qAgenda = query(collection(db, "agenda"), orderBy("tanggal", "desc"));
-  onSnapshot(qAgenda, (snapshot) => {
-    const data = snapshot.docs.map(doc => doc.data());
-    window.renderAgenda(data);
-  });
-</script>
-<script>
-/* ====== Optimized interactions - Refactored ====== */
+/* ---------------------------
+   Toast helper
+   --------------------------- */
+function showToast(txt, duration = 2600){
+  const el = $('#toast');
+  if(!el) return;
+  el.textContent = txt;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
 
+/* ---------------------------
+   Firestore realtime listeners (pengumuman & agenda)
+   --------------------------- */
+if (db) {
+  try {
+    const qPengumuman = query(collection(db, "pengumuman"), orderBy("tanggal", "desc"));
+    onSnapshot(qPengumuman, (snapshot) => {
+      const data = snapshot.docs.map(doc => doc.data());
+      window.renderMading(data);
+    });
+  } catch (e) {
+    console.warn('pengumuman listener error', e);
+  }
+
+  try {
+    const qAgenda = query(collection(db, "agenda"), orderBy("tanggal", "desc"));
+    onSnapshot(qAgenda, (snapshot) => {
+      const data = snapshot.docs.map(doc => doc.data());
+      renderAgenda(data);
+    });
+  } catch (e) {
+    console.warn('agenda listener error', e);
+  }
+}
+
+/* ---------------------------
+   App init: load local data.json (fallback if Firebase not used)
+   --------------------------- */
 document.addEventListener('DOMContentLoaded', () => {
+  initializeLocal();
+});
 
-  /* Helpers */
-  const $ = sel => document.querySelector(sel);
-  const $$ = sel => Array.from(document.querySelectorAll(sel));
+async function initializeLocal() {
+  try {
+    const resp = await fetch('data.json');
+    if (!resp.ok) throw new Error('data.json not found');
+    const data = await resp.json();
+    renderPiket(data.piket);
+    renderSiswa(data.siswa);
+    renderGallery(data.galeri);
+    renderStats(data);
+    setupSiswaControls();
+  } catch (err) {
+    console.info('No data.json or failed loading it:', err);
+    const sg = $('#siswa-grid');
+    if (sg) sg.innerHTML = '<p class="text-muted hcenter">Memuat daftar siswa gagal.</p>';
+  }
 
-  // Fungsi Render Mading (dibuat global agar bisa diakses dari script module)
-  window.renderMading = (pengumumanData) => {
-      const madingContent = $('#mading-content');
-      if (!madingContent) return;
+  // Common initialization
+  renderRoster();
+  setupStaticWidgets();
+  setupEventListeners();
+  observeElements();
+}
 
-      if (pengumumanData.length === 0) {
-          madingContent.innerHTML = '<p class="text-muted">Belum ada pengumuman terbaru.</p>';
-          return;
-      }
+/* ---------------------------
+   Render helpers (roster, piket, siswa, gallery, agenda)
+   --------------------------- */
+function renderStats(data) {
+  if (data && data.galeri) {
+    const el = $('#photoCount'); if (el) el.textContent = data.galeri.length || 0;
+  }
+  const sEl = $('#stat-jml-siswa'); if (sEl) sEl.textContent = '35';
+  if (data && data.agenda) { const aEl = $('#stat-agenda'); if (aEl) aEl.textContent = data.agenda.length || 0; }
+}
 
-      madingContent.innerHTML = pengumumanData.map(p => {
-          const tanggal = p.tanggal && p.tanggal.toDate ? p.tanggal.toDate().toLocaleDateString('id-ID', {
-              day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
-          }) : 'Waktu tidak tersedia';
-          
-          const isi = p.isi || '[Tidak ada konten]';
+function renderPiket(piketData) {
+  const piketBody = $('#piket-body');
+  if (!piketBody || !piketData) return;
+  const today = (new Date().getDay() + 6) % 7; // Monday = 0
+  piketBody.innerHTML = piketData.map((piket, i) => `
+    <tr${today === i ? ' class="today"' : ''}>
+      <td>${piket.hari}</td>
+      <td>${piket.anggota.map(nama => `<span class="badge">${nama}</span>`).join(' ')}</td>
+    </tr>
+  `).join('');
+}
 
-          return `
-            <div class="mading-card">
-                <div class="timestamp">${tanggal} WIB</div>
-                <div class="content">${isi.replace(/\n/g, '<br>')}</div>
-            </div>
-          `;
-      }).join('');
+function renderAgenda(agendaData) {
+  const agendaList = $('#agenda-list');
+  if (!agendaList) return;
+  if (!agendaData || agendaData.length === 0) {
+    agendaList.innerHTML = '<p class="text-muted hcenter">Belum ada agenda kegiatan.</p>';
+    return;
+  }
+  const formatDate = (ts) => {
+    if (!ts || !ts.toDate) return 'Tanggal tidak valid';
+    const d = ts.toDate();
+    const bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
+    return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+  };
+  agendaList.innerHTML = agendaData.map(item => `
+    <div class="card">
+      <div>
+        <span class="badge">${item.kategori}</span>
+        <span style="color:var(--accentA);font-weight:700;margin-left:8px">${formatDate(item.tanggal)}</span>
+      </div>
+      <div style="font-size:1.02rem;font-weight:800;color:#fff;margin-top:6px">${item.judul}</div>
+      <div style="color:var(--muted-weak);margin-top:6px">${item.deskripsi}</div>
+    </div>
+  `).join('');
+}
+
+function renderSiswa(siswaData) {
+  const siswaGrid = $('#siswa-grid');
+  if(!siswaGrid || !siswaData) return;
+  siswaGrid.innerHTML = '';
+  const avatarColors = ['00d4ff','ff2fb3','6a5cff','22ffbb','ffd600'];
+  siswaData.forEach((siswa, index) => {
+    const color = avatarColors[index % avatarColors.length];
+    const card = document.createElement('div');
+    card.className = 'siswa-card';
+    card.dataset.name = siswa.nama;
+    const avatar = document.createElement('img');
+    avatar.className = 'siswa-avatar';
+    avatar.width = 58; avatar.height = 58;
+    const initials = (siswa.nama || '').split(' ').map(n=>n[0]||'').slice(0,2).join('').toUpperCase();
+    avatar.src = `https://via.placeholder.com/120/${color}/061018?text=${encodeURIComponent(initials)}`;
+    avatar.alt = `Avatar ${siswa.nama}`;
+    avatar.loading = 'lazy';
+    const nameEl = document.createElement('div'); nameEl.className = 'siswa-name'; nameEl.textContent = siswa.nama;
+    const roleEl = document.createElement('div'); roleEl.className = 'siswa-role'; roleEl.textContent = 'Anggota XI-4';
+    card.appendChild(avatar); card.appendChild(nameEl); card.appendChild(roleEl);
+    siswaGrid.appendChild(card);
+  });
+}
+
+function renderGallery(galleryData) {
+  const galleryGrid = $('#gallery-grid');
+  if(!galleryGrid || !galleryData) return;
+  galleryGrid.innerHTML = '';
+  galleryData.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'item card';
+    card.dataset.full = `assets/${item.url}`;
+    card.dataset.cat = item.kategori || 'Lainnya';
+
+    // Basic image; if you later add webp/srcset files, replace with <picture>
+    const img = document.createElement('img');
+    img.loading = 'lazy';
+    img.src = `assets/${item.url}`;
+    img.alt = item.alt || item.kategori || 'Foto Kelas';
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    img.style.borderRadius = '8px';
+
+    const tag = document.createElement('div');
+    tag.className = 'tag';
+    tag.style.position = 'absolute';
+    tag.style.bottom = '8px';
+    tag.style.left = '8px';
+    tag.style.background = 'rgba(0,0,0,0.6)';
+    tag.style.padding = '4px 8px';
+    tag.style.borderRadius = '6px';
+    tag.style.fontSize = '0.8rem';
+    tag.textContent = item.kategori || 'Lainnya';
+
+    card.appendChild(img);
+    card.appendChild(tag);
+    galleryGrid.appendChild(card);
+  });
+}
+
+function renderRoster() {
+  const rosterBody = $('#roster-body');
+  if (!rosterBody) return;
+
+  const jadwal = {
+    "Senin": ["Prakarya (2 les)", "Sosiologi (1 les)", "Fisika (2 les)", "Matematika (U) (2 les)", "B.Indonesia (2 les)"],
+    "Selasa": ["B.Inggris (3 les)", "Sosiologi (1 les)", "Matematika (TL) (3 les)", "Sejarah (1 les)", "Seni Rupa (2 les)"],
+    "Rabu": ["Matematika (U) (2 les)", "Geografi (2 les)", "Pjok (3 les)", "Agama (3 les)"],
+    "Kamis": ["Geografi (3 les)", "Sosiologi (2 les)", "B.Indonesia (2 les)", "Sejarah (1 les)", "Ppkn (2 les)"],
+    "Jum'at": ["Matematika (TL) (2 les)", "Sosiologi (1 les)", "Fisika (3 les)"]
   };
 
-  /* Toast */
-  function showToast(txt, duration = 2600){
-    const el = $('#toast');
-    if(!el) return;
-    el.textContent = txt;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), duration);
+  let html = '';
+  for (const hari in jadwal) {
+      html += `<tr>`;
+      html += `<td><b>${hari}</b></td>`;
+      html += `<td>${jadwal[hari].join('<br>')}</td>`;
+      html += `</tr>`;
   }
-  
-  // ===============================================
-  // MAIN APP INITIALIZATION
-  // ===============================================
-  async function initializeApp() {
-    try {
-      const response = await fetch('data.json');
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      
-      // Render content from data.json
-      renderPiket(data.piket);
-      // renderAgenda(data.agenda); <-- DIHAPUS
-      renderSiswa(data.siswa);
-      renderGallery(data.galeri);
-      renderStats(data);
-      setupSiswaControls();
+  rosterBody.innerHTML = html;
+}
 
-    } catch (error) {
-      console.error("Gagal memuat data kelas:", error);
-      showToast("Gagal memuat data. Coba refresh halaman.", 5000);
-      $('#siswa-grid').innerHTML = '<p class="text-muted hcenter">Gagal memuat daftar siswa.</p>';
-    }
-    
-    // Render content NOT from data.json
-    renderRoster();
-    setupStaticWidgets();
-    setupEventListeners();
-    observeElements();
+/* ---------------------------
+   Static widgets (clock, countdown, weather, motivation)
+   --------------------------- */
+function setupStaticWidgets() {
+  // Motivasi
+  const motivasiEl = $('#motivasi');
+  if(motivasiEl){
+    const texts = [
+      "Jangan takut gagal, karena kegagalan adalah awal dari keberhasilan. 💪",
+      "Kamu hebat! Teruslah berproses dan berkembang. 🚀",
+      "Belajar hari ini, sukses esok hari! 📚",
+      "Jangan menyerah sebelum sukses menjemputmu. 🏆",
+      "Bersama kita kuat, bersama kita hebat!"
+    ];
+    const pick = () => { motivasiEl.textContent = texts[Math.floor(Math.random()*texts.length)]; };
+    pick(); setInterval(pick,9000);
   }
 
-  // ===============================================
-  // RENDER FUNCTIONS
-  // ===============================================
-  function renderStats(data) {
-    if (data.galeri) $('#photoCount').textContent = data.galeri.length || 0;
-    $('#stat-jml-siswa').textContent = '35'; // Static as requested
-    if (data.agenda) $('#stat-agenda').textContent = data.agenda.length || 0;
-  }
-  
-  function renderPiket(piketData) {
-    const piketBody = $('#piket-body');
-    if(!piketBody || !piketData) return;
-    const today = (new Date().getDay() + 6) % 7; // Monday = 0
-    piketBody.innerHTML = piketData.map((piket, i) => `
-      <tr${today === i ? ' class="today"' : ''}>
-        <td>${piket.hari}</td>
-        <td>${piket.anggota.map(nama => `<span class="badge">${nama}</span>`).join(' ')}</td>
-      </tr>
-    `).join('');
+  // Clock
+  const jamEl = $('#jam');
+  if(jamEl){
+    const clock = () => { const n=new Date(); jamEl.textContent = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`; };
+    clock(); setInterval(clock,1000);
   }
 
-  function renderAgenda(agendaData) {
-    const agendaList = $('#agenda-list');
-    if(!agendaList) return;
-    if(!agendaData || agendaData.length === 0) {
-        agendaList.innerHTML = '<p class="text-muted hcenter">Belum ada agenda kegiatan.</p>';
-        return;
-    }
-    const formatDate = (ts) => {
-      if (!ts || !ts.toDate) return 'Tanggal tidak valid';
-      const d = ts.toDate();
-      const bulan = ["Jan","Feb","Mar","Apr","Mei","Jun","Jul","Agu","Sep","Okt","Nov","Des"];
-      return `${d.getDate()} ${bulan[d.getMonth()]} ${d.getFullYear()}`;
+  // Countdown to UTS
+  const countEl = $('#countdown');
+  if(countEl){
+    const updateCountdown = () => {
+      const uts = new Date('2025-09-14T07:00:00');
+      const diff = uts - new Date();
+      if(diff <= 0){ countEl.textContent = 'UTS sudah selesai!'; return; }
+      const days = Math.floor(diff/(1000*60*60*24));
+      const hours = Math.floor((diff/(1000*60*60))%24);
+      const mins = Math.floor((diff/(1000*60))%60);
+      countEl.textContent = `${days} hari, ${hours} jam, ${mins} menit`;
     };
-    agendaList.innerHTML = agendaData.map(item => `
-      <div class="card">
-        <div>
-          <span class="badge">${item.kategori}</span>
-          <span style="color:var(--accentA);font-weight:700;margin-left:8px">${formatDate(item.tanggal)}</span>
-        </div>
-        <div style="font-size:1.02rem;font-weight:800;color:#fff;margin-top:6px">${item.judul}</div>
-        <div style="color:var(--muted-weak);margin-top:6px">${item.deskripsi}</div>
-      </div>
-    `).join('');
+    updateCountdown(); setInterval(updateCountdown,30000);
   }
-  
-  function renderSiswa(siswaData) {
-    const siswaGrid = $('#siswa-grid');
-    if(!siswaGrid || !siswaData) return;
-    siswaGrid.innerHTML = ''; // Clear loading
-    const avatarColors = ['00d4ff', 'ff2fb3', '6a5cff', '22ffbb', 'ffd600'];
-    siswaData.forEach((siswa, index) => {
-      const color = avatarColors[index % avatarColors.length];
-      const card = document.createElement('div');
-      card.className = 'siswa-card';
-      card.dataset.name = siswa.nama;
-      card.innerHTML = `
-        <img class="siswa-avatar" src="https://via.placeholder.com/120/${color}/061018?text=${siswa.avatarInitial}" alt="Avatar ${siswa.nama}" width="58" height="58" loading="lazy">
-        <div class="siswa-name">${siswa.nama}</div>
-        <div class="siswa-role">Anggota XI-4</div>
-      `;
-      siswaGrid.appendChild(card);
+
+  // Weather (open-meteo)
+  const iconEl = $('#cuaca-icon');
+  const descEl = $('#cuaca-desc');
+  if(iconEl && descEl){
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=3.474&longitude=99.033&current_weather=true')
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(d => {
+      if(!d || !d.current_weather) throw 'no data';
+      const c = d.current_weather;
+      const codes = {0:"☀️ Cerah",1:"🌤️ Cerah",2:"⛅ Berawan",3:"☁️ Mendung",45:"🌫️ Kabut",51:"🌧️ Gerimis",61:"🌦️ Hujan",80:"🌧️ Hujan"};
+      const icon = codes[c.weathercode] || '🌤️ Cerah';
+      iconEl.textContent = icon.split(' ')[0];
+      descEl.innerHTML = `Dolok Masihul<br>${Math.round(c.temperature)}°C, ${icon.replace(/^[^\s]+\s/,'')}`;
+    }).catch(_=>{
+      iconEl.textContent = '🌤️';
+      descEl.innerHTML = 'Dolok Masihul<br>27°C, Cerah';
+    });
+  }
+}
+
+/* ---------------------------
+   Event listeners: menu, gallery, lightbox, forms, voting, QR
+   --------------------------- */
+function setupEventListeners() {
+  // Parallax hero background (passive)
+  const heroBg = $('#heroParallax');
+  if(heroBg) window.addEventListener('scroll', () => { heroBg.style.transform = `translateY(${window.scrollY * 0.16}px)`; }, { passive: true });
+
+  // Menu Toggle
+  const menuBtn = $('#menuBtn');
+  const navlinks = $('#navlinks');
+  const navCloseBtn = $('#navCloseBtn');
+  const navOverlay = $('#navOverlay');
+
+  const openMenu = () => {
+      if(!navlinks || !navOverlay) return;
+      navlinks.classList.add('open');
+      navOverlay.classList.add('open');
+      document.body.classList.add('no-scroll');
+      if(menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
+      // move focus to first link for accessibility
+      const firstLink = navlinks.querySelector('a');
+      firstLink?.focus();
+  };
+
+  const closeMenu = () => {
+      if(!navlinks || !navOverlay) return;
+      navlinks.classList.remove('open');
+      navOverlay.classList.remove('open');
+      document.body.classList.remove('no-scroll');
+      if(menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+      menuBtn?.focus();
+  };
+
+  if (menuBtn && navlinks && navCloseBtn && navOverlay) {
+      menuBtn.addEventListener('click', openMenu);
+      navCloseBtn.addEventListener('click', closeMenu);
+      navOverlay.addEventListener('click', closeMenu);
+  }
+
+  // Update aria-current when clicking nav links (helpful for SPA-ish behavior)
+  $$('#navlinks a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      $$('#navlinks a').forEach(x => x.classList.remove('active') || x.removeAttribute('aria-current'));
+      a.classList.add('active');
+      a.setAttribute('aria-current','page');
+      // if mobile menu is open, close it
+      if(navlinks && navlinks.classList.contains('open')) closeMenu();
+    });
+  });
+
+  // Gallery & Lightbox
+  window.filterGaleri = (cat) => {
+    $$('#gallery-grid .item').forEach(item => { item.style.display = (cat==='all' || item.dataset.cat===cat) ? '' : 'none'; });
+  };
+  const openGalleryBtn = $('#openGalleryBtn');
+  if (openGalleryBtn) {
+    openGalleryBtn.addEventListener('click', () => {
+      document.getElementById('gallery')?.scrollIntoView({ behavior: 'smooth' });
     });
   }
 
-  function renderGallery(galleryData) {
-    const galleryGrid = $('#gallery-grid');
-    if(!galleryGrid || !galleryData) return;
-    galleryGrid.innerHTML = '';
-    galleryData.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'item card';
-        card.dataset.full = `assets/${item.url}`;
-        card.dataset.cat = item.kategori;
-        card.innerHTML = `
-            <img loading="lazy" src="assets/${item.url}" alt="${item.alt}" style="width:100%;height:100%;object-fit:cover;border-radius:8px">
-            <div class="tag" style="position:absolute; bottom:8px; left:8px; background:rgba(0,0,0,0.6); padding: 4px 8px; border-radius:6px; font-size:0.8rem;">${item.kategori}</div>`;
-        galleryGrid.appendChild(card);
+  const gallery = $('#gallery-grid');
+  const lightbox = $('#lightbox');
+  const modalImg = $('#modalImg');
+  let lastFocused = null;
+
+  if(gallery && lightbox && modalImg) {
+    gallery.addEventListener('click', (e) => {
+      const item = e.target.closest('.item');
+      if(!item) return;
+      lastFocused = document.activeElement;
+      modalImg.src = item.dataset.full;
+      const clickedImg = item.querySelector('img');
+      modalImg.alt = clickedImg ? (clickedImg.alt || 'Preview gambar') : 'Preview gambar';
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden','false');
+      trapFocus(lightbox);
+      modalImg.focus?.();
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if(e.target === lightbox) { closeLightbox(); }
+    });
+
+    window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox(); });
+  }
+
+  function closeLightbox() {
+    if(!lightbox) return;
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden','true');
+    releaseFocusTrap(lightbox);
+    try{ lastFocused?.focus?.(); }catch(e){}
+  }
+
+  // Denah duduk preview
+  const denahBtn = $('#lihatDenahBtn');
+  if (denahBtn) {
+    denahBtn.addEventListener('click', () => {
+      if(!lightbox || !modalImg) return;
+      lastFocused = document.activeElement;
+      modalImg.src = 'assets/1755172317014.jpg';
+      modalImg.alt = 'Denah Tempat Duduk XI-4';
+      lightbox.classList.add('open');
+      lightbox.setAttribute('aria-hidden', 'false');
+      trapFocus(lightbox);
+      modalImg.focus?.();
     });
   }
-  
-  function renderRoster() {
-      const rosterBody = $('#roster-body');
-      if (!rosterBody) return;
 
-      const jadwal = {
-        "Senin": ["Prakarya (2 les)", "Sosiologi (1 les)", "Fisika (2 les)", "Matematika (U) (2 les)", "B.Indonesia (2 les)"],
-        "Selasa": ["B.Inggris (3 les)", "Sosiologi (1 les)", "Matematika (TL) (3 les)", "Sejarah (1 les)", "Seni Rupa (2 les)"],
-        "Rabu": ["Matematika (U) (2 les)", "Geografi (2 les)", "Pjok (3 les)", "Agama (3 les)"],
-        "Kamis": ["Geografi (3 les)", "Sosiologi (2 les)", "B.Indonesia (2 les)", "Sejarah (1 les)", "Ppkn (2 les)"],
-        "Jum'at": ["Matematika (TL) (2 les)", "Sosiologi (1 les)", "Fisika (3 les)"]
-      };
-
-      let html = '';
-      for (const hari in jadwal) {
-          html += `<tr>`;
-          html += `<td><b>${hari}</b></td>`;
-          html += `<td>${jadwal[hari].join('<br>')}</td>`;
-          html += `</tr>`;
-      }
-      rosterBody.innerHTML = html;
-  }
-
-  // ===============================================
-  // STATIC WIDGETS
-  // ===============================================
-  function setupStaticWidgets() {
-    // Motivasi
-    const motivasiEl = $('#motivasi');
-    if(motivasiEl){
-      const texts = [
-        "Jangan takut gagal, karena kegagalan adalah awal dari keberhasilan. 💪",
-        "Kamu hebat! Teruslah berproses dan berkembang. 🚀",
-        "Belajar hari ini, sukses esok hari! 📚",
-        "Jangan menyerah sebelum sukses menjemputmu. 🏆",
-        "Bersama kita kuat, bersama kita hebat!"
-      ];
-      const pick = () => { motivasiEl.textContent = texts[Math.floor(Math.random()*texts.length)]; };
-      pick(); setInterval(pick,9000);
-    }
-
-    // Clock & Countdown
-    const jamEl = $('#jam');
-    if(jamEl){
-      const clock = () => { const n=new Date(); jamEl.textContent = `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`; };
-      clock(); setInterval(clock,1000);
-    }
-    const countEl = $('#countdown');
-    if(countEl){
-      const updateCountdown = () => {
-        const uts = new Date('2025-09-14T07:00:00');
-        const diff = uts - new Date();
-        if(diff <= 0){ countEl.textContent = 'UTS sudah selesai!'; return; }
-        const days = Math.floor(diff/(1000*60*60*24));
-        const hours = Math.floor((diff/(1000*60*60))%24);
-        const mins = Math.floor((diff/(1000*60))%60);
-        countEl.textContent = `${days} hari, ${hours} jam, ${mins} menit`;
-      };
-      updateCountdown(); setInterval(updateCountdown,30000);
-    }
-
-    // Weather
-    const iconEl = $('#cuaca-icon');
-    const descEl = $('#cuaca-desc');
-    if(iconEl && descEl){
-      fetch('https://api.open-meteo.com/v1/forecast?latitude=3.474&longitude=99.033&current_weather=true')
-      .then(r => r.ok ? r.json() : Promise.reject())
-      .then(d => {
-        if(!d || !d.current_weather) throw 'no data';
-        const c = d.current_weather;
-        const codes = {0:"☀️ Cerah",1:"🌤️ Cerah",2:"⛅ Berawan",3:"☁️ Mendung",45:"🌫️ Kabut",51:"🌧️ Gerimis",61:"🌦️ Hujan",80:"🌧️ Hujan"};
-        const icon = codes[c.weathercode] || '🌤️ Cerah';
-        iconEl.textContent = icon.split(' ')[0];
-        descEl.innerHTML = `Dolok Masihul<br>${Math.round(c.temperature)}°C, ${icon.replace(/^[^\s]+\s/,'')}`;
-      }).catch(_=>{
-        iconEl.textContent = '🌤️';
-        descEl.innerHTML = 'Dolok Masihul<br>27°C, Cerah';
+  // Feedback Form (Formspree)
+  const feedbackForm = $('#feedbackForm');
+  if(feedbackForm) {
+    feedbackForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const form = e.target;
+      const data = new FormData(form);
+      fetch(form.action, {
+        method: form.method,
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      }).then(response => {
+        if (response.ok) {
+          showToast('Aspirasi berhasil terkirim! Terima kasih.');
+          form.reset();
+        } else {
+          showToast('Oops! Gagal mengirim aspirasi. Coba lagi.');
+        }
+      }).catch(() => {
+        showToast('Oops! Ada masalah jaringan. Coba lagi.');
       });
-    }
-  }
-
-  // ===============================================
-  // EVENT LISTENERS
-  // ===============================================
-  function setupEventListeners() {
-    // Parallax
-    const heroBg = $('#heroParallax');
-    if(heroBg) window.addEventListener('scroll', () => { heroBg.style.transform = `translateY(${window.scrollY * 0.16}px)`; }, { passive: true });
-
-    // Menu Toggle
-    const menuBtn = $('#menuBtn');
-    const navlinks = $('#navlinks');
-    const navCloseBtn = $('#navCloseBtn');
-    const navOverlay = $('#navOverlay');
-
-    const openMenu = () => {
-        navlinks.classList.add('open');
-        navOverlay.classList.add('open');
-        document.body.classList.add('no-scroll');
-        menuBtn.setAttribute('aria-expanded', 'true');
-    };
-
-    const closeMenu = () => {
-        navlinks.classList.remove('open');
-        navOverlay.classList.remove('open');
-        document.body.classList.remove('no-scroll');
-        menuBtn.setAttribute('aria-expanded', 'false');
-    };
-
-    if (menuBtn && navlinks && navCloseBtn && navOverlay) {
-        menuBtn.addEventListener('click', openMenu);
-        navCloseBtn.addEventListener('click', closeMenu);
-        navOverlay.addEventListener('click', closeMenu);
-    }
-
-    // Gallery & Lightbox
-    window.filterGaleri = (cat) => {
-      $$('#gallery-grid .item').forEach(item => { item.style.display = (cat==='all' || item.dataset.cat===cat) ? '' : 'none'; });
-    };
-    $('#openGalleryBtn').addEventListener('click', () => {
-        document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
     });
-    const gallery = $('#gallery-grid');
-    const lightbox = $('#lightbox');
-    const modalImg = $('#modalImg');
-    if(gallery && lightbox && modalImg) {
-      gallery.addEventListener('click', (e) => {
-        const item = e.target.closest('.item');
-        if(!item) return;
-        modalImg.src = item.dataset.full;
-        lightbox.classList.add('open');
-        lightbox.setAttribute('aria-hidden','false');
-      });
-      lightbox.addEventListener('click', (e) => {
-        if(e.target === lightbox) { lightbox.classList.remove('open'); lightbox.setAttribute('aria-hidden','true'); }
-      });
+  }
+
+  // Voting Form
+  const voteForm = $('#voteForm');
+  if(voteForm) {
+    // Provide a simple client-side result simulation
+    let voteCount = {Ekskul:2, Classmeeting:3, "Studi Tur":1, Pensi:4, "Bakti Sosial":2};
+    voteForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const val = voteForm.vote && voteForm.vote.value;
+      if(!val) { showToast('Pilih opsi dulu ya!'); return; }
+      voteCount[val] = (voteCount[val]||0) + 1;
+      const total = Object.values(voteCount).reduce((a,b)=>a+b,0);
+      const text = Object.entries(voteCount).map(([k,v])=>`${k}: ${Math.round(v/total*100)}%`).join(' • ');
+      $('#voteResult').innerHTML = 'Hasil: ' + text;
+      showToast('Terima kasih sudah voting!');
+    });
+  }
+
+  // QR Code (dark theme friendly)
+  const makeQR = () => {
+    if(typeof QRCode !== 'undefined'){
+      const el = $('#qrCode');
+      if(!el) return;
+      el.innerHTML = '';
+      new QRCode(el, { text: window.location.href, width: 86, height: 86, colorDark : "#00d4ff", colorLight : "#0f1116", correctLevel : QRCode.CorrectLevel.H });
     }
-    window.addEventListener('keydown', (e) => { if(e.key === 'Escape' && lightbox.classList.contains('open')) lightbox.click(); });
-    
-    // Denah duduk
-    const denahBtn = $('#lihatDenahBtn');
-    if (denahBtn) {
-      denahBtn.addEventListener('click', () => {
-        const lightbox = $('#lightbox');
-        const modalImg = $('#modalImg');
-        if (lightbox && modalImg) {
-          modalImg.src = 'assets/1755172317014.jpg';
-          lightbox.classList.add('open');
-          lightbox.setAttribute('aria-hidden', 'false');
+  };
+  if(window.QRCode) makeQR();
+  else window.addEventListener('load', () => setTimeout(makeQR, 500));
+
+  // To top button
+  $('#toTopBtn')?.addEventListener('click', () => window.scrollTo({ top:0, behavior:'smooth' }));
+}
+
+/* ---------------------------
+   Focus trap for modal (lightweight)
+   --------------------------- */
+let _trapHandler = null;
+function trapFocus(modal){
+  const focusable = modal.querySelectorAll('a,button,input,textarea,select,[tabindex]:not([tabindex="-1"])');
+  const list = Array.from(focusable);
+  if(list.length === 0) return;
+  const first = list[0], last = list[list.length-1];
+  _trapHandler = (e) => {
+    if(e.key !== 'Tab') return;
+    if(e.shiftKey){
+      if(document.activeElement === first){ e.preventDefault(); last.focus(); }
+    } else {
+      if(document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  };
+  modal.addEventListener('keydown', _trapHandler);
+}
+function releaseFocusTrap(modal){
+  if(_trapHandler) modal.removeEventListener('keydown', _trapHandler);
+  _trapHandler = null;
+}
+
+/* ---------------------------
+   Siswa search & sort
+   --------------------------- */
+function setupSiswaControls(){
+  const grid = $('#siswa-grid');
+  if(!grid) return;
+  const search = $('#siswa-search');
+  const sort = $('#siswa-sort');
+
+  function applyFilterAndSort(){
+    const q = (search && search.value.trim().toLowerCase()) || '';
+    const order = (sort && sort.value) || 'az';
+    const cards = Array.from(grid.children);
+
+    cards.forEach(card => {
+      if (!card.dataset.name) return;
+      const name = card.dataset.name.toLowerCase();
+      const isVisible = name.includes(q);
+      card.style.display = isVisible ? '' : 'none';
+    });
+
+    const visibleCards = cards.filter(card => card.style.display !== 'none');
+    visibleCards.sort((a,b) => {
+      const na = a.dataset.name.toLowerCase();
+      const nb = b.dataset.name.toLowerCase();
+      return order === 'az' ? na.localeCompare(nb) : nb.localeCompare(na);
+    });
+
+    visibleCards.forEach(card => grid.appendChild(card));
+  }
+
+  if (search) search.addEventListener('input', applyFilterAndSort);
+  if (sort) sort.addEventListener('change', applyFilterAndSort);
+}
+
+/* ---------------------------
+   Intersection Observer for reveal animations & lazy appearance
+   --------------------------- */
+function observeElements(){
+  if('IntersectionObserver' in window){
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
         }
       });
-    }
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
 
-    // Feedback Form (sudah terhubung ke Formspree)
-    const feedbackForm = $('#feedbackForm');
-    if(feedbackForm) {
-      feedbackForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const form = e.target;
-        const data = new FormData(form);
-        fetch(form.action, {
-          method: form.method,
-          body: data,
-          headers: { 'Accept': 'application/json' }
-        }).then(response => {
-          if (response.ok) {
-            showToast('Aspirasi berhasil terkirim! Terima kasih.');
-            form.reset();
-          } else {
-            showToast('Oops! Gagal mengirim aspirasi. Coba lagi.');
-          }
-        }).catch(error => {
-          showToast('Oops! Ada masalah jaringan. Coba lagi.');
-        });
-      });
-    }
-    
-    // Voting Form
-    const voteForm = $('#voteForm');
-    if(voteForm) {
-        let voteCount = {Ekskul:2, Classmeeting:3, "Studi Tur":1, Pensi:4, "Bakti Sosial":2};
-        voteForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const val = voteForm.vote && voteForm.vote.value;
-            if(!val) { showToast('Pilih opsi dulu ya!'); return; }
-            voteCount[val] = (voteCount[val]||0) + 1;
-            const total = Object.values(voteCount).reduce((a,b)=>a+b,0);
-            const text = Object.entries(voteCount).map(([k,v])=>`${k}: ${Math.round(v/total*100)}%`).join(' • ');
-            $('#voteResult').innerHTML = 'Hasil: ' + text;
-            showToast('Terima kasih sudah voting!');
-        });
-    }
-
-    // QR Code
-    const makeQR = () => {
-      if(typeof QRCode !== 'undefined'){
-        $('#qrCode').innerHTML = '';
-        new QRCode($('#qrCode'), { text: window.location.href, width: 86, height: 86, colorDark : "#00d4ff", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
-      }
-    };
-    if(window.QRCode) makeQR();
-    else window.addEventListener('load', () => setTimeout(makeQR, 500));
+    $$('.widget-card, .card, .siswa-card, .item').forEach(el => revealObserver.observe(el));
+  } else {
+    $$('.widget-card, .card, .siswa-card, .item').forEach(el => el.classList.add('visible'));
   }
-  
-  // ===============================================
-  // SISWA SEARCH & SORT
-  // ===============================================
-  function setupSiswaControls() {
-    const grid = $('#siswa-grid');
-    if(!grid) return;
-    const search = $('#siswa-search');
-    const sort = $('#siswa-sort');
-    
-    function applyFilterAndSort(){
-      const q = search.value.trim().toLowerCase();
-      const order = sort.value || 'az';
-      const cards = Array.from(grid.children);
+}
 
-      cards.forEach(card => {
-        if (!card.dataset.name) return;
-        const name = card.dataset.name.toLowerCase();
-        const isVisible = name.includes(q);
-        card.style.display = isVisible ? '' : 'none';
-      });
-      
-      const visibleCards = cards.filter(card => card.style.display !== 'none');
-      visibleCards.sort((a,b) => {
-        const na = a.dataset.name.toLowerCase();
-        const nb = b.dataset.name.toLowerCase();
-        return order === 'az' ? na.localeCompare(nb) : nb.localeCompare(na);
-      });
-      
-      visibleCards.forEach(card => grid.appendChild(card));
-    }
-    
-    search.addEventListener('input', applyFilterAndSort);
-    sort.addEventListener('change', applyFilterAndSort);
-  }
-
-  // ===============================================
-  // INTERSECTION OBSERVER for Lazy Load & Reveal
-  // ===============================================
-  function observeElements() {
-    if('IntersectionObserver' in window){
-      const revealObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-          if(entry.isIntersecting){
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
-      
-      $$('.widget-card, .card, .siswa-card, .item').forEach(el => revealObserver.observe(el));
-    } else {
-      $$('.widget-card, .card, .siswa-card, .item').forEach(el => el.classList.add('visible'));
-    }
-  }
-
-  // START THE APP
-  initializeApp();
-
-});
+/* ============================
+   End inline module
+   ============================ */
 </script>
 
 </body>
